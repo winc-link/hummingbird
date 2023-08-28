@@ -1,0 +1,50 @@
+[Writable]
+LogLevel = 'INFO'
+LogPath = 'hummingbird/logs/hummingbird-core.log'
+
+[Service]
+BootTimeout = 30000
+CheckInterval = '10s'
+Host = '0.0.0.0'
+ServerBindAddr = '' # Leave blank so default to Host value unless different value is needed.
+Port = 58081
+Protocol = 'http'
+MaxResultCount = 50000
+StartupMsg = 'This is the Core Resource Microservice'
+Timeout = 45000
+
+[RpcServer]
+Address = '0.0.0.0:57081'
+UseTLS = false
+CertFile = ''
+KeyFile = ''
+
+[Clients]
+[Clients.Ekuiper]
+Protocol = 'http'
+Host = '127.0.0.1'
+Port = 9081
+
+[WebServer]
+Host = '0.0.0.0'
+Port = 3000
+Timeout = 120
+
+[Databases]
+[Databases.Metadata]
+[Databases.Metadata.Primary]
+Type = 'sqlite'
+DataSource = 'hummingbird/db-data/core-data/core.db?_timeout=5000'
+
+[Databases.Data]
+[Databases.Data.Primary]
+Type = 'leveldb'
+DataSource = 'hummingbird/db-data/leveldb-core-data/'
+
+[MessageQueue]
+Protocol = 'tcp'
+Host = '127.0.0.1'
+Port = 58090
+Type = 'mqtt'
+PublishTopicPrefix = 'eventbus/in'
+

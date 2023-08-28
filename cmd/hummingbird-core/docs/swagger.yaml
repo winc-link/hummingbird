@@ -1,0 +1,2998 @@
+basePath: /api/v1
+definitions:
+  dtos.AlertRuleSearchQueryResponse:
+    properties:
+      alert_level:
+        description: 告警级别
+        type: string
+      alert_type:
+        description: 告警类型
+        type: string
+      created:
+        type: integer
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+      sub_rule:
+        items:
+          $ref: '#/definitions/dtos.SubRule'
+        type: array
+    type: object
+  dtos.AlertSearchQueryResponse:
+    properties:
+      alert_level:
+        description: 告警级别
+        type: string
+      alert_result:
+        description: Description string               `json:"description"`
+        type: string
+      id:
+        type: string
+      is_send:
+        type: boolean
+      message:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+      treated_time:
+        type: integer
+      trigger_time:
+        type: integer
+    type: object
+  dtos.CategoryTemplateResponse:
+    properties:
+      category_key:
+        type: string
+      category_name:
+        description: 品类名称
+        type: string
+      id:
+        type: string
+      scene:
+        description: 所属场景
+        type: string
+    type: object
+  dtos.CloudInstanceAuthorizationRequest:
+    properties:
+      instance_authorization_config:
+        $ref: '#/definitions/dtos.InstanceAuthorizationConfig'
+      instance_log_config:
+        $ref: '#/definitions/dtos.InstanceLogConfig'
+    type: object
+  dtos.CloudInstanceSearchQueryRequest:
+    properties:
+      cloudServiceId:
+        type: string
+      id:
+        type: string
+      ids:
+        type: string
+      isAll:
+        type: boolean
+      likeId:
+        type: string
+      name:
+        type: string
+      nameLike:
+        type: string
+      orderBy:
+        type: string
+      page:
+        type: integer
+      pageSize:
+        type: integer
+    type: object
+  dtos.ConfigDnsResponse:
+    properties:
+      dns:
+        items:
+          type: string
+        type: array
+      openSwitch:
+        type: boolean
+    type: object
+  dtos.ConfigDnsUpdateRequest:
+    properties:
+      dns:
+        items:
+          type: string
+        type: array
+      openSwitch:
+        type: boolean
+    required:
+    - dns
+    type: object
+  dtos.ConfigNetWork:
+    properties:
+      gwIp:
+        type: string
+      localIp:
+        type: string
+      ncId:
+        type: string
+      netlink:
+        type: boolean
+      smIp:
+        type: string
+    type: object
+  dtos.ConfigNetWorkResponse:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/dtos.ConfigNetWork'
+        type: array
+    type: object
+  dtos.ConfigNetworkUpdateRequest:
+    properties:
+      gwIp:
+        type: string
+      localIp:
+        type: string
+      ncId:
+        type: string
+      smIp:
+        type: string
+    required:
+    - gwIp
+    - localIp
+    - ncId
+    - smIp
+    type: object
+  dtos.DataResourceInfo:
+    properties:
+      name:
+        type: string
+      option:
+        additionalProperties: true
+        type: object
+      type:
+        type: string
+    type: object
+  dtos.DeviceAuthInfoResponse:
+    properties:
+      clientId:
+        type: string
+      mqttHostUrl:
+        type: string
+      password:
+        type: string
+      port:
+        type: integer
+      username:
+        type: string
+    type: object
+  dtos.DeviceInfoResponse:
+    properties:
+      cloud_device_id:
+        type: string
+      cloud_instance_id:
+        type: string
+      cloud_product_id:
+        type: string
+      create_at:
+        type: integer
+      description:
+        type: string
+      device_service_name:
+        type: string
+      id:
+        type: string
+      last_online_time:
+        type: integer
+      last_sync_time:
+        type: integer
+      name:
+        type: string
+      platform:
+        type: string
+      product_id:
+        type: string
+      product_name:
+        type: string
+      secret:
+        type: string
+      status:
+        type: string
+    type: object
+  dtos.DeviceLibraryAddRequest:
+    properties:
+      container_name:
+        type: string
+      description:
+        type: string
+      docker_config_id:
+        type: string
+      docker_repo_name:
+        type: string
+      id:
+        type: string
+      language:
+        description: 代码语言
+        type: string
+      name:
+        type: string
+      protocol:
+        type: string
+      support_version:
+        properties:
+          config_json:
+            type: string
+          docker_params:
+            type: string
+          docker_params_switch:
+            type: boolean
+          expert_mode:
+            type: boolean
+          expert_mode_content:
+            type: string
+          is_default:
+            type: boolean
+        type: object
+      version:
+        type: string
+    required:
+    - container_name
+    - docker_config_id
+    - docker_repo_name
+    - name
+    - version
+    type: object
+  dtos.DeviceSearchQueryResponse:
+    properties:
+      cloud_instance_id:
+        type: string
+      cloud_product_id:
+        type: string
+      created:
+        type: integer
+      description:
+        type: string
+      drive_instance_id:
+        type: string
+      driver_service_name:
+        type: string
+      id:
+        type: string
+      last_online_time:
+        type: integer
+      last_sync_time:
+        type: integer
+      name:
+        type: string
+      platform:
+        type: string
+      product_id:
+        type: string
+      product_name:
+        type: string
+      status:
+        type: string
+    type: object
+  dtos.DeviceServiceUpdateRequest:
+    properties:
+      config:
+        additionalProperties: true
+        type: object
+      deviceLibraryId:
+        type: string
+      docker_params:
+        type: string
+      docker_params_switch:
+        type: boolean
+      expertMode:
+        type: boolean
+      expertModeContent:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      platform:
+        type: string
+    required:
+    - id
+    type: object
+  dtos.DockerConfigAddRequest:
+    properties:
+      account:
+        description: 账户
+        type: string
+      address:
+        description: 仓库地址 true
+        type: string
+      id:
+        type: string
+      password:
+        description: 密码
+        type: string
+    required:
+    - address
+    type: object
+  dtos.DockerConfigUpdateRequest:
+    properties:
+      account:
+        type: string
+      address:
+        type: string
+      id:
+        type: string
+      password:
+        type: string
+    required:
+    - id
+    type: object
+  dtos.Filter:
+    properties:
+      condition:
+        type: string
+      message_source:
+        type: string
+      select_name:
+        type: string
+      sql:
+        type: string
+    type: object
+  dtos.InitPasswordRequest:
+    properties:
+      newPassword:
+        type: string
+    required:
+    - newPassword
+    type: object
+  dtos.InstanceAuthorizationConfig:
+    properties:
+      ak:
+        type: string
+      endpoint:
+        type: string
+      instance_id:
+        type: string
+      mqtt_host:
+        type: string
+      mqtt_port:
+        type: string
+      regions:
+        type: string
+      sk:
+        type: string
+    type: object
+  dtos.InstanceLogConfig:
+    properties:
+      log_filter:
+        items:
+          type: string
+        type: array
+      log_switch:
+        type: boolean
+    type: object
+  dtos.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  dtos.Notify:
+    properties:
+      end_effect_time:
+        description: 生效结束时间
+        type: string
+      name:
+        description: 告警方式
+        type: string
+      option:
+        additionalProperties:
+          type: string
+        type: object
+      start_effect_time:
+        description: 生效开始时间
+        type: string
+    type: object
+  dtos.ProductAddRequest:
+    properties:
+      category_template_id:
+        description: 如果是自定义 id固定传递"1"
+        type: string
+      data_format:
+        description: 数据类型
+        type: string
+      description:
+        description: 描述
+        type: string
+      factory:
+        description: 厂家
+        type: string
+      key:
+        description: Platform           string `json:"platform"`
+        type: string
+      name:
+        description: 产品名字
+        type: string
+      net_type:
+        description: 联网模式
+        type: string
+      node_type:
+        description: 节点类型
+        type: string
+      protocol:
+        description: 协议
+        type: string
+    type: object
+  dtos.ProductSearchByIdResponse:
+    properties:
+      actions: {}
+      cloud_instance_id:
+        type: string
+      cloud_product_id:
+        type: string
+      created_at:
+        type: integer
+      data_format:
+        type: string
+      description:
+        type: string
+      events: {}
+      factory:
+        type: string
+      id:
+        type: string
+      key:
+        type: string
+      last_sync_time:
+        type: integer
+      name:
+        type: string
+      net_type:
+        type: string
+      node_type:
+        type: string
+      platform:
+        type: string
+      properties: {}
+      protocol:
+        type: string
+      status:
+        type: string
+    type: object
+  dtos.ProductSearchQueryResponse:
+    properties:
+      category_name:
+        type: string
+      created_at:
+        type: integer
+      id:
+        type: string
+      key:
+        type: string
+      name:
+        type: string
+      node_type:
+        type: string
+      platform:
+        type: string
+      product_id:
+        type: string
+      status:
+        type: string
+    type: object
+  dtos.ProductSyncByIdRequest:
+    properties:
+      product_id:
+        type: string
+    type: object
+  dtos.ProductSyncRequest:
+    properties:
+      cloud_instance_id:
+        type: string
+    type: object
+  dtos.RuleEngineSearchQueryResponse:
+    properties:
+      created:
+        type: integer
+      dataResource:
+        $ref: '#/definitions/dtos.DataResourceInfo'
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      resource_type:
+        type: string
+      status:
+        type: string
+    type: object
+  dtos.SubRule:
+    properties:
+      device_id:
+        type: string
+      option:
+        additionalProperties:
+          type: string
+        type: object
+      product_id:
+        type: string
+      trigger:
+        type: string
+    type: object
+  dtos.ThingModelActions:
+    properties:
+      call_type:
+        type: string
+      input_param:
+        items:
+          $ref: '#/definitions/dtos.ThingModelEventAction'
+        type: array
+      output_param:
+        items:
+          $ref: '#/definitions/dtos.ThingModelEventAction'
+        type: array
+    type: object
+  dtos.ThingModelAddOrUpdateReq:
+    properties:
+      action:
+        $ref: '#/definitions/dtos.ThingModelActions'
+      code:
+        type: string
+      description:
+        type: string
+      event:
+        $ref: '#/definitions/dtos.ThingModelEvents'
+      id:
+        type: string
+      name:
+        description: ModelName      string                `json:"model_name"`
+        type: string
+      product_id:
+        type: string
+      property:
+        $ref: '#/definitions/dtos.ThingModelProperties'
+      tag:
+        type: string
+      thing_model_type:
+        type: string
+    type: object
+  dtos.ThingModelDataResponse:
+    properties:
+      access_mode:
+        type: string
+      code:
+        type: string
+      data_type:
+        type: string
+      name:
+        type: string
+      time:
+        type: integer
+      unit:
+        type: string
+      value: {}
+    type: object
+  dtos.ThingModelDeleteReq:
+    properties:
+      thing_model_id:
+        type: string
+      thing_model_type:
+        type: string
+    type: object
+  dtos.ThingModelEventAction:
+    properties:
+      code:
+        type: string
+      name:
+        type: string
+      specs: {}
+      type:
+        type: string
+    type: object
+  dtos.ThingModelEventDataResponse:
+    properties:
+      event_code:
+        type: string
+      event_type:
+        type: string
+      name:
+        type: string
+      output_data:
+        additionalProperties: true
+        type: object
+      report_time:
+        type: integer
+    type: object
+  dtos.ThingModelEvents:
+    properties:
+      event_type:
+        type: string
+      output_param:
+        items:
+          $ref: '#/definitions/dtos.ThingModelEventAction'
+        type: array
+    type: object
+  dtos.ThingModelProperties:
+    properties:
+      access_model:
+        type: string
+      require:
+        type: boolean
+      specs: {}
+      type:
+        type: string
+    type: object
+  dtos.ThingModelServiceDataResponse:
+    properties:
+      code:
+        type: string
+      input_data:
+        additionalProperties: true
+        type: object
+      output_data:
+        additionalProperties: true
+        type: object
+      report_time:
+        type: integer
+      service_name:
+        type: string
+    type: object
+  dtos.ThingModelTemplateResponse:
+    properties:
+      actions: {}
+      category_key:
+        type: string
+      category_name:
+        description: 品类名称
+        type: string
+      events: {}
+      id:
+        type: string
+      properties:
+        description: models.Properties
+      thing_model_json:
+        type: string
+    type: object
+  dtos.UnitResponse:
+    properties:
+      id:
+        type: string
+      symbol:
+        type: string
+      unit_name:
+        type: string
+    type: object
+  dtos.UpdatePasswordRequest:
+    properties:
+      currentPassword:
+        type: string
+      newPassword:
+        type: string
+    required:
+    - currentPassword
+    - newPassword
+    type: object
+  httphelper.CommonResponse:
+    properties:
+      errorCode:
+        description: 错误码
+        type: integer
+      errorMsg:
+        description: 错误信息
+        type: string
+      result:
+        description: 返回结果
+        type: object
+      success:
+        description: 接口是否成功
+        type: boolean
+      successMsg:
+        description: 成功信息
+        type: string
+    type: object
+  httphelper.ResPageResult:
+    properties:
+      list: {}
+      page:
+        type: integer
+      pageSize:
+        type: integer
+      total:
+        type: integer
+    type: object
+info:
+  contact:
+    email: email@winc-link.com
+    name: API Support
+  description: Swagger API for Golang Project hummingbird.
+  termsOfService: http://swagger.io/terms/
+  title: 赢创万联（蜂鸟） API
+  version: "1.0"
+paths:
+  /api/v1/alert:
+    post:
+      parameters:
+      - in: query
+        name: content
+        type: string
+      - in: query
+        name: device_id
+        type: string
+      - in: query
+        name: rule_id
+        type: string
+      - description: 触发时间
+        in: query
+        name: trigger_time
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 告警列表
+      tags:
+      - 告警中心
+  /api/v1/alert-ignore/:ruleId:
+    put:
+      produces:
+      - application/json
+      responses: {}
+      summary: 忽略告警
+      tags:
+      - 告警中心
+  /api/v1/alert-list:
+    get:
+      parameters:
+      - in: query
+        name: alertLevel
+        type: string
+      - in: query
+        name: id
+        type: string
+      - in: query
+        name: ids
+        type: string
+      - in: query
+        name: isAll
+        type: boolean
+      - in: query
+        name: likeId
+        type: string
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: nameLike
+        type: string
+      - in: query
+        name: orderBy
+        type: string
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: pageSize
+        type: integer
+      - in: query
+        name: status
+        type: string
+      - in: query
+        name: triggerEndTime
+        type: integer
+      - in: query
+        name: triggerStartTime
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/dtos.AlertSearchQueryResponse'
+              type: array
+            type: array
+      summary: 告警列表
+      tags:
+      - 告警中心
+  /api/v1/alert-plate:
+    get:
+      parameters:
+      - in: query
+        name: alertLevel
+        type: string
+      - in: query
+        name: id
+        type: string
+      - in: query
+        name: ids
+        type: string
+      - in: query
+        name: isAll
+        type: boolean
+      - in: query
+        name: likeId
+        type: string
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: nameLike
+        type: string
+      - in: query
+        name: orderBy
+        type: string
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: pageSize
+        type: integer
+      - in: query
+        name: status
+        type: string
+      - in: query
+        name: triggerEndTime
+        type: integer
+      - in: query
+        name: triggerStartTime
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/dtos.AlertSearchQueryResponse'
+              type: array
+            type: array
+      summary: 告警列表
+      tags:
+      - 告警中心
+  /api/v1/alert-rule:
+    get:
+      parameters:
+      - in: query
+        name: id
+        type: string
+      - in: query
+        name: ids
+        type: string
+      - in: query
+        name: isAll
+        type: boolean
+      - in: query
+        name: likeId
+        type: string
+      - in: query
+        name: msg
+        type: string
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: nameLike
+        type: string
+      - in: query
+        name: orderBy
+        type: string
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: pageSize
+        type: integer
+      - in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/dtos.AlertRuleSearchQueryResponse'
+              type: array
+            type: array
+      summary: 告警规则列表
+      tags:
+      - 告警中心
+    post:
+      parameters:
+      - description: 告警级别
+        in: query
+        name: alert_level
+        type: string
+      - description: 告警类型
+        in: query
+        name: alert_type
+        type: string
+      - description: 描述
+        in: query
+        name: description
+        type: string
+      - description: 名字
+        in: query
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 添加告警规则
+      tags:
+      - 告警中心
+  /api/v1/alert-rule/:ruleId:
+    delete:
+      parameters:
+      - description: ruleId
+        in: path
+        name: ruleId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 告警规则删除
+      tags:
+      - 告警中心
+    get:
+      parameters:
+      - description: ruleId
+        in: path
+        name: ruleId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 告警规则详情
+      tags:
+      - 告警中心
+    put:
+      parameters:
+      - description: 执行条件
+        in: query
+        name: condition
+        type: string
+      - in: query
+        name: id
+        type: string
+      - description: 静默时间
+        in: query
+        name: silence_time
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 编辑告警规则
+      tags:
+      - 告警中心
+  /api/v1/alert-rule/:ruleId/restart:
+    post:
+      parameters:
+      - description: ruleId
+        in: path
+        name: ruleId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 告警规则重启
+      tags:
+      - 告警中心
+  /api/v1/alert-rule/:ruleId/start:
+    post:
+      parameters:
+      - description: ruleId
+        in: path
+        name: ruleId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 告警规则启动
+      tags:
+      - 告警中心
+  /api/v1/alert-rule/:ruleId/stop:
+    post:
+      parameters:
+      - description: ruleId
+        in: path
+        name: ruleId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 告警规则停止
+      tags:
+      - 告警中心
+  /api/v1/alert-treated:
+    post:
+      produces:
+      - application/json
+      responses: {}
+      summary: 处理告警
+      tags:
+      - 告警中心
+  /api/v1/auth/init-password:
+    post:
+      parameters:
+      - description: 密码初始化参数
+        in: body
+        name: init_password_request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.InitPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 密码初始化
+      tags:
+      - 用户系统
+  /api/v1/auth/initInfo:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 获取网关账号是否初始化
+      tags:
+      - 用户系统
+  /api/v1/auth/login:
+    post:
+      parameters:
+      - description: 用户登录参数
+        in: body
+        name: login_request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 用户登录
+      tags:
+      - 用户系统
+  /api/v1/auth/password:
+    put:
+      parameters:
+      - description: 密码修改参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.UpdatePasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 密码修改
+      tags:
+      - 用户系统
+  /api/v1/category-template:
+    get:
+      parameters:
+      - in: query
+        name: categoryName
+        type: string
+      - in: query
+        name: id
+        type: string
+      - in: query
+        name: ids
+        type: string
+      - in: query
+        name: isAll
+        type: boolean
+      - in: query
+        name: likeId
+        type: string
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: nameLike
+        type: string
+      - in: query
+        name: orderBy
+        type: string
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: pageSize
+        type: integer
+      - in: query
+        name: scene
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dtos.CategoryTemplateResponse'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: 标准产品品类列表
+      tags:
+      - 标准产品品类
+  /api/v1/category-template/sync:
+    post:
+      parameters:
+      - in: query
+        name: categoryName
+        type: string
+      - in: query
+        name: id
+        type: string
+      - in: query
+        name: ids
+        type: string
+      - in: query
+        name: isAll
+        type: boolean
+      - in: query
+        name: likeId
+        type: string
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: nameLike
+        type: string
+      - in: query
+        name: orderBy
+        type: string
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: pageSize
+        type: integer
+      - in: query
+        name: scene
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: 同步标准产品品类
+      tags:
+      - 标准产品品类
+  /api/v1/cloud-instance:
+    get:
+      parameters:
+      - in: query
+        name: cloudServiceId
+        type: string
+      - in: query
+        name: id
+        type: string
+      - in: query
+        name: ids
+        type: string
+      - in: query
+        name: isAll
+        type: boolean
+      - in: query
+        name: likeId
+        type: string
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: nameLike
+        type: string
+      - in: query
+        name: orderBy
+        type: string
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.CloudInstanceSearchQueryRequest'
+      security:
+      - ApiKeyAuth: []
+      summary: 云服务实例列表
+      tags:
+      - 我的云服务实例
+  /api/v1/cloud-instance/:cloudInstanceId/authorization:
+    post:
+      parameters:
+      - description: 参数
+        in: path
+        name: cloudInstanceId
+        required: true
+        type: string
+      - description: 参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CloudInstanceAuthorizationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: 云服务实例授权
+      tags:
+      - 我的云服务实例
+  /api/v1/cloud-service:
+    get:
+      parameters:
+      - in: query
+        name: id
+        type: string
+      - in: query
+        name: ids
+        type: string
+      - in: query
+        name: isAll
+        type: boolean
+      - in: query
+        name: likeId
+        type: string
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: nameLike
+        type: string
+      - in: query
+        name: orderBy
+        type: string
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: 云服务列表
+      tags:
+      - 云服务
+  /api/v1/dataresource:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 资源管理查询
+      tags:
+      - 资源管理
+    post:
+      parameters:
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: type
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 添加资源管理
+      tags:
+      - 资源管理
+    put:
+      parameters:
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: type
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 修改资源管理
+      tags:
+      - 资源管理
+  /api/v1/dataresource/:resourceId:
+    delete:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 删除资源管理
+      tags:
+      - 资源管理
+    get:
+      parameters:
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: type
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 添加资源管理
+      tags:
+      - 资源管理
+  /api/v1/device:
+    post:
+      parameters:
+      - in: query
+        name: description
+        type: string
+      - in: query
+        name: device_id
+        type: string
+      - in: query
+        name: driver_instance_id
+        type: string
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: platform
+        type: string
+      - in: query
+        name: product_id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 添加设备
+      tags:
+      - 设备管理
+  /api/v1/device-libraries:
+    get:
+      parameters:
+      - in: query
+        name: classify_id
+        type: integer
+      - in: query
+        name: docker_config_id
+        type: string
+      - in: query
+        name: docker_repo_name
+        type: string
+      - in: query
+        name: download_status
+        type: string
+      - description: 驱动库类型，1：驱动，2：三方应用
+        enum:
+        - 1
+        - 2
+        in: query
+        name: driver_type
+        type: integer
+      - in: query
+        name: id
+        type: string
+      - in: query
+        name: ids
+        type: string
+      - description: 内置条件
+        in: query
+        name: imageIds
+        type: string
+      - in: query
+        name: isAll
+        type: boolean
+      - in: query
+        name: is_internal
+        type: string
+      - in: query
+        name: likeId
+        type: string
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: nameLike
+        type: string
+      - in: query
+        name: name_alias_like
+        type: string
+      - description: 约定，没有from的为 内置查询条件
+        in: query
+        name: noInIds
+        type: string
+      - description: 内置条件
+        in: query
+        name: noInImageIds
+        type: string
+      - in: query
+        name: orderBy
+        type: string
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.ResPageResult'
+      summary: 查询驱动
+      tags:
+      - 驱动库管理
+    post:
+      parameters:
+      - description: 参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.DeviceLibraryAddRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 新增驱动库
+      tags:
+      - 驱动库管理
+  /api/v1/device-libraries/:deviceLibraryId:
+    delete:
+      parameters:
+      - description: 驱动ID
+        in: path
+        name: deviceLibraryId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 删除驱动
+      tags:
+      - 驱动库管理
+    put:
+      parameters:
+      - description: 驱动ID
+        in: path
+        name: deviceLibraryId
+        required: true
+        type: string
+      - description: Alias        *string `json:"alias"`
+        in: query
+        name: description
+        type: string
+      - in: query
+        name: icon
+        type: string
+      - in: query
+        name: id
+        required: true
+        type: string
+      - in: query
+        name: language
+        type: string
+      - in: query
+        name: manual
+        type: string
+      - in: query
+        name: name
+        type: string
+      - description: Manufacturer *string `json:"manufacturer"`
+        in: query
+        name: protocol
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 驱动库更新
+      tags:
+      - 驱动库管理
+  /api/v1/device-mqtt/:deviceId:
+    get:
+      parameters:
+      - description: pid
+        in: path
+        name: deviceId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.DeviceAuthInfoResponse'
+      summary: 查询mqtt连接详情
+      tags:
+      - 设备管理
+  /api/v1/device-server:
+    put:
+      parameters:
+      - description: 参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.DeviceServiceUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 编辑驱动实例
+      tags:
+      - 驱动实例管理
+  /api/v1/device-servers:
+    get:
+      parameters:
+      - in: query
+        name: cloudProductId
+        type: string
+      - description: 驱动库ID
+        in: query
+        name: deviceLibraryId
+        type: string
+      - description: 驱动库IDs
+        in: query
+        name: deviceLibraryIds
+        type: string
+      - description: 驱动库类型，1：驱动，2：三方应用
+        enum:
+        - 1
+        - 2
+        in: query
+        name: driverType
+        type: integer
+      - in: query
+        name: id
+        type: string
+      - in: query
+        name: ids
+        type: string
+      - in: query
+        name: isAll
+        type: boolean
+      - in: query
+        name: likeId
+        type: string
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: nameLike
+        type: string
+      - in: query
+        name: orderBy
+        type: string
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: pageSize
+        type: integer
+      - in: query
+        name: platform
+        type: string
+      - in: query
+        name: productId
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.ResPageResult'
+      summary: 查询驱动实例
+      tags:
+      - 驱动实例管理
+  /api/v1/device-sync:
+    post:
+      parameters:
+      - in: query
+        name: cloud_instance_id
+        type: string
+      - in: query
+        name: driver_instance_id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 同步设备信息
+      tags:
+      - 设备管理
+  /api/v1/device-sync/:deviceId:
+    post:
+      parameters:
+      - in: query
+        name: device_id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 同步单个设备信息
+      tags:
+      - 设备管理
+  /api/v1/device/:deviceId:
+    delete:
+      parameters:
+      - description: pid
+        in: path
+        name: deviceId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 删除设备
+      tags:
+      - 设备管理
+    get:
+      parameters:
+      - description: pid
+        in: path
+        name: deviceId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.DeviceInfoResponse'
+      summary: 查询详情
+      tags:
+      - 设备管理
+    put:
+      parameters:
+      - description: pid
+        in: path
+        name: deviceId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 更新设备
+      tags:
+      - 设备管理
+  /api/v1/device/:deviceId/thing-model/event:
+    get:
+      parameters:
+      - in: query
+        name: code
+        type: string
+      - in: query
+        name: deviceId
+        type: string
+      - in: query
+        name: first
+        type: boolean
+      - in: query
+        name: id
+        type: string
+      - in: query
+        name: ids
+        type: string
+      - in: query
+        name: isAll
+        type: boolean
+      - in: query
+        name: last
+        type: boolean
+      - in: query
+        name: likeId
+        type: string
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: nameLike
+        type: string
+      - in: query
+        name: orderBy
+        type: string
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: pageSize
+        type: integer
+      - description: |-
+          Page     int     `json:"page"`
+          PageSize int     `json:"pageSize"`
+        in: query
+        items:
+          type: integer
+        name: range
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/dtos.ThingModelEventDataResponse'
+              type: array
+            type: array
+      summary: 查看设备事件数据
+      tags:
+      - 设备管理
+  /api/v1/device/:deviceId/thing-model/property:
+    get:
+      parameters:
+      - in: query
+        name: code
+        type: string
+      - in: query
+        name: deviceId
+        type: string
+      - in: query
+        name: first
+        type: boolean
+      - in: query
+        name: id
+        type: string
+      - in: query
+        name: ids
+        type: string
+      - in: query
+        name: isAll
+        type: boolean
+      - in: query
+        name: last
+        type: boolean
+      - in: query
+        name: likeId
+        type: string
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: nameLike
+        type: string
+      - in: query
+        name: orderBy
+        type: string
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: pageSize
+        type: integer
+      - description: |-
+          Page     int     `json:"page"`
+          PageSize int     `json:"pageSize"`
+        in: query
+        items:
+          type: integer
+        name: range
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/dtos.ThingModelDataResponse'
+              type: array
+            type: array
+      summary: 查看设备属性数据
+      tags:
+      - 设备管理
+  /api/v1/device/:deviceId/thing-model/service:
+    get:
+      parameters:
+      - in: query
+        name: code
+        type: string
+      - in: query
+        name: deviceId
+        type: string
+      - in: query
+        name: first
+        type: boolean
+      - in: query
+        name: id
+        type: string
+      - in: query
+        name: ids
+        type: string
+      - in: query
+        name: isAll
+        type: boolean
+      - in: query
+        name: last
+        type: boolean
+      - in: query
+        name: likeId
+        type: string
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: nameLike
+        type: string
+      - in: query
+        name: orderBy
+        type: string
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: pageSize
+        type: integer
+      - description: |-
+          Page     int     `json:"page"`
+          PageSize int     `json:"pageSize"`
+        in: query
+        items:
+          type: integer
+        name: range
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/dtos.ThingModelServiceDataResponse'
+              type: array
+            type: array
+      summary: 查看设备服务调用数据
+      tags:
+      - 设备管理
+  /api/v1/device/upload-validated:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: 设备导入模版校验
+      tags:
+      - 设备管理
+  /api/v1/device_classify:
+    get:
+      parameters:
+      - in: query
+        name: id
+        type: string
+      - in: query
+        name: ids
+        type: string
+      - in: query
+        name: isAll
+        type: boolean
+      - in: query
+        name: likeId
+        type: string
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: nameLike
+        type: string
+      - in: query
+        name: orderBy
+        type: string
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 驱动库分类
+      tags:
+      - 驱动库分类
+  /api/v1/device_server/:deviceServiceId:
+    delete:
+      parameters:
+      - description: 驱动实例 ID
+        in: path
+        name: deviceServiceId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 删除驱动实例（废弃，已经改为websockert形式)
+      tags:
+      - 驱动实例管理
+  /api/v1/devices:
+    delete:
+      parameters:
+      - description: pid
+        in: path
+        name: deviceId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 批量删除设备
+      tags:
+      - 设备管理
+    get:
+      parameters:
+      - in: query
+        name: cloudInstanceId
+        type: string
+      - in: query
+        name: cloudProductId
+        type: string
+      - in: query
+        name: driveInstanceId
+        type: string
+      - in: query
+        name: id
+        type: string
+      - in: query
+        name: ids
+        type: string
+      - in: query
+        name: isAll
+        type: boolean
+      - in: query
+        name: likeId
+        type: string
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: nameLike
+        type: string
+      - in: query
+        name: orderBy
+        type: string
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: pageSize
+        type: integer
+      - in: query
+        name: platform
+        type: string
+      - in: query
+        name: productId
+        type: string
+      - in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/dtos.DeviceSearchQueryResponse'
+              type: array
+            type: array
+      summary: 查询设备列表
+      tags:
+      - 设备管理
+  /api/v1/devices/bind-driver:
+    put:
+      parameters:
+      - in: query
+        items:
+          type: string
+        name: device_ids
+        type: array
+      - in: query
+        name: driver_instance_id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 设备批量绑定驱动
+      tags:
+      - 设备管理
+  /api/v1/devices/import:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 设备导入
+      tags:
+      - 设备管理
+  /api/v1/devices/import-template:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: 设备导入模版下载
+      tags:
+      - 设备管理
+  /api/v1/docker-configs:
+    get:
+      parameters:
+      - in: query
+        name: account
+        type: string
+      - in: query
+        name: address
+        type: string
+      - in: query
+        name: id
+        type: string
+      - in: query
+        name: ids
+        type: string
+      - in: query
+        name: isAll
+        type: boolean
+      - in: query
+        name: likeId
+        type: string
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: nameLike
+        type: string
+      - in: query
+        name: orderBy
+        type: string
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.ResPageResult'
+      summary: 获取镜像列表
+      tags:
+      - 镜像仓库管理
+    post:
+      parameters:
+      - description: 参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.DockerConfigAddRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 新增镜像
+      tags:
+      - 镜像仓库管理
+  /api/v1/docker-configs/:dockerConfigId:
+    delete:
+      parameters:
+      - description: 镜像ID
+        in: path
+        name: dockerConfigId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 删除仓库信息
+      tags:
+      - 镜像仓库管理
+    put:
+      parameters:
+      - description: 参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.DockerConfigUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 修改仓库信息
+      tags:
+      - 镜像仓库管理
+  /api/v1/homepage:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.ResPageResult'
+      security:
+      - ApiKeyAuth: []
+      summary: 首页
+      tags:
+      - 首页
+  /api/v1/iot-platform:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: 云平台列表
+      tags:
+      - 产品管理
+  /api/v1/local/config/dns:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.ConfigDnsResponse'
+      summary: 获取dns
+      tags:
+      - 配网助手
+    put:
+      parameters:
+      - description: 参数
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.ConfigDnsUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.ConfigDnsResponse'
+      summary: 修改dns
+      tags:
+      - 配网助手
+  /api/v1/local/config/network:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.ConfigNetWorkResponse'
+      summary: 获取网卡列表
+      tags:
+      - 配网助手
+    put:
+      parameters:
+      - description: 参数
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.ConfigNetworkUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.ConfigNetWorkResponse'
+      summary: 修改网卡
+      tags:
+      - 配网助手
+  /api/v1/product:
+    post:
+      parameters:
+      - description: 参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.ProductAddRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: 添加产品
+      tags:
+      - 产品管理
+  /api/v1/product-sync:
+    post:
+      parameters:
+      - description: 参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.ProductSyncRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: 云端产品同步
+      tags:
+      - 产品管理
+  /api/v1/product-sync/:productId:
+    post:
+      parameters:
+      - description: 参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.ProductSyncByIdRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: 云端单个产品同步
+      tags:
+      - 产品管理
+  /api/v1/product/:productId:
+    delete:
+      parameters:
+      - description: pid
+        in: path
+        name: productId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除产品
+      tags:
+      - 产品管理
+    get:
+      parameters:
+      - description: pid
+        in: path
+        name: productId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.ProductSearchByIdResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: 查询产品详情
+      tags:
+      - 产品管理
+  /api/v1/products:
+    get:
+      parameters:
+      - in: query
+        name: cloudInstanceId
+        type: string
+      - in: query
+        name: id
+        type: string
+      - in: query
+        name: ids
+        type: string
+      - in: query
+        name: isAll
+        type: boolean
+      - in: query
+        name: likeId
+        type: string
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: nameLike
+        type: string
+      - in: query
+        name: orderBy
+        type: string
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: pageSize
+        type: integer
+      - in: query
+        name: platform
+        type: string
+      - in: query
+        name: productId
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dtos.ProductSearchQueryResponse'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: 查询产品列表
+      tags:
+      - 产品管理
+  /api/v1/rule-engine:
+    get:
+      parameters:
+      - in: query
+        name: id
+        type: string
+      - in: query
+        name: ids
+        type: string
+      - in: query
+        name: isAll
+        type: boolean
+      - in: query
+        name: likeId
+        type: string
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: nameLike
+        type: string
+      - in: query
+        name: orderBy
+        type: string
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: pageSize
+        type: integer
+      - in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/dtos.RuleEngineSearchQueryResponse'
+              type: array
+            type: array
+      summary: 规则引擎列表
+      tags:
+      - 规则引擎
+    post:
+      parameters:
+      - in: query
+        name: data_resource_id
+        type: string
+      - description: 描述
+        in: query
+        name: description
+        type: string
+      - description: 名字
+        in: query
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 添加规则引擎
+      tags:
+      - 规则引擎
+    put:
+      parameters:
+      - in: query
+        name: data_resource_id
+        type: string
+      - description: 描述
+        in: query
+        name: description
+        type: string
+      - in: query
+        name: id
+        type: string
+      - description: 名字
+        in: query
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 编辑规则引擎
+      tags:
+      - 规则引擎
+  /api/v1/rule-engine/:ruleEngineId:
+    get:
+      parameters:
+      - description: ruleEngineId
+        in: path
+        name: ruleEngineId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 规则引擎详情
+      tags:
+      - 规则引擎
+  /api/v1/rule-engine/:ruleEngineId/delete:
+    delete:
+      parameters:
+      - description: ruleEngineId
+        in: path
+        name: ruleEngineId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 规则引擎删除
+      tags:
+      - 规则引擎
+  /api/v1/rule-engine/:ruleEngineId/start:
+    post:
+      parameters:
+      - description: ruleEngineId
+        in: path
+        name: ruleEngineId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 规则引擎启动
+      tags:
+      - 规则引擎
+  /api/v1/rule-engine/:ruleEngineId/status:
+    get:
+      parameters:
+      - description: ruleEngineId
+        in: path
+        name: ruleEngineId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 规则引擎状态
+      tags:
+      - 规则引擎
+  /api/v1/rule-engine/:ruleEngineId/stop:
+    post:
+      parameters:
+      - description: ruleEngineId
+        in: path
+        name: ruleEngineId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 规则引擎停止
+      tags:
+      - 规则引擎
+  /api/v1/system/backup:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 网关备份下载
+      tags:
+      - 网关管理
+  /api/v1/thingmodel:
+    delete:
+      parameters:
+      - description: 参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.ThingModelDeleteReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: 产品删除物模型
+      tags:
+      - 物模型
+    post:
+      parameters:
+      - description: 参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.ThingModelAddOrUpdateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: 产品添加物模型
+      tags:
+      - 物模型
+    put:
+      parameters:
+      - description: 参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.ThingModelAddOrUpdateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: 修改产品物模型
+      tags:
+      - 物模型
+  /api/v1/thingmodel-template:
+    get:
+      parameters:
+      - in: query
+        name: categoryName
+        type: string
+      - in: query
+        name: id
+        type: string
+      - in: query
+        name: ids
+        type: string
+      - in: query
+        name: isAll
+        type: boolean
+      - in: query
+        name: likeId
+        type: string
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: nameLike
+        type: string
+      - in: query
+        name: orderBy
+        type: string
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: pageSize
+        type: integer
+      - in: query
+        name: scene
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dtos.ThingModelTemplateResponse'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: 物模型模版详情
+      tags:
+      - 物模型模版
+  /api/v1/thingmodel-template/sync:
+    post:
+      parameters:
+      - in: query
+        name: categoryName
+        type: string
+      - in: query
+        name: id
+        type: string
+      - in: query
+        name: ids
+        type: string
+      - in: query
+        name: isAll
+        type: boolean
+      - in: query
+        name: likeId
+        type: string
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: nameLike
+        type: string
+      - in: query
+        name: orderBy
+        type: string
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: pageSize
+        type: integer
+      - in: query
+        name: scene
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: 同步物模型
+      tags:
+      - 物模型模版
+  /api/v1/thingmodel/system:
+    get:
+      parameters:
+      - in: query
+        name: modelName
+        type: string
+      - in: query
+        name: thingModelType
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: 查询系统物模型
+      tags:
+      - 物模型
+  /api/v1/thingmodel/unit:
+    get:
+      parameters:
+      - in: query
+        name: id
+        type: string
+      - in: query
+        name: ids
+        type: string
+      - in: query
+        name: isAll
+        type: boolean
+      - in: query
+        name: likeId
+        type: string
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: nameLike
+        type: string
+      - in: query
+        name: orderBy
+        type: string
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: pageSize
+        type: integer
+      - in: query
+        name: unitName
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dtos.UnitResponse'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: 物模型单位
+      tags:
+      - 物模型
+  /api/v1/thingmodel/unit-sync:
+    post:
+      parameters:
+      - in: query
+        name: version_name
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: 物模型单位同步
+      tags:
+      - 物模型
+  /api/v1/typeresource:
+    get:
+      parameters:
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: type
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 实例类型
+      tags:
+      - 资源管理
+  /api/v1/unbind-driver:
+    put:
+      parameters:
+      - in: query
+        items:
+          type: string
+        name: device_ids
+        type: array
+      - in: query
+        name: driver_instance_id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httphelper.CommonResponse'
+      summary: 设备批量与驱动解绑
+      tags:
+      - 设备管理
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: x-token
+    type: apiKey
+swagger: "2.0"

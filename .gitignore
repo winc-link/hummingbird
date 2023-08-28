@@ -1,0 +1,7 @@
+.idea
+vendor
+logs
+edge-db-data
+hummingbird
+mqtt-broker
+go.sum

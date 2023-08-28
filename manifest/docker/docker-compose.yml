@@ -1,0 +1,49 @@
+version: "3"
+
+networks:
+  hummingbird:
+    driver: bridge
+services:
+  mqtt-broker:
+    image: registry.cn-shanghai.aliyuncs.com/winc-link/mqtt-broker:v1.0
+    container_name: mqtt-broker
+    hostname: mqtt-broker
+    restart: always
+    ports:
+      - "58090:58090"
+    networks:
+      - hummingbird
+  ekuiper:
+    image: lfedge/ekuiper:1.10.0-slim
+    ports:
+      - "9081:9081"
+    container_name: ekuiper
+    hostname: ekuiper
+    restart: always
+    user: root
+    volumes:
+      - ./kuiper/data:/kuiper/data
+      - ./kuiper/log:/kuiper/log
+    environment:
+      MQTT_SOURCE__DEFAULT__SERVER: "tcp://mqtt-broker:58090"
+      KUIPER__BASIC__CONSOLELOG: "true"
+      KUIPER__BASIC__IGNORECASE: "false"
+    networks:
+      - hummingbird
+  hummingbird-core:
+    image: registry.cn-shanghai.aliyuncs.com/winc-link/hummingbird-core:v1.0
+    container_name: hummingbird-core
+    restart: always
+    hostname: hummingbird-core
+    ports:
+      - "3000:3000"
+      - "58081:58081"
+    depends_on:
+      - ekuiper
+      - mqtt-broker
+    volumes:
+      - ./:/var/bin/hummingbird
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - hummingbird
+

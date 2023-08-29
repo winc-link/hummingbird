@@ -3,14 +3,10 @@ LogLevel = 'INFO'
 LogPath = 'hummingbird/logs/hummingbird-core.log'
 
 [Service]
-BootTimeout = 30000
-CheckInterval = '10s'
 Host = '0.0.0.0'
 ServerBindAddr = '' # Leave blank so default to Host value unless different value is needed.
 Port = 58081
 Protocol = 'http'
-MaxResultCount = 50000
-StartupMsg = 'This is the Core Resource Microservice'
 Timeout = 45000
 
 [RpcServer]
@@ -47,4 +43,3 @@ Host = '127.0.0.1'
 Port = 58090
 Type = 'mqtt'
 PublishTopicPrefix = 'eventbus/in'
-

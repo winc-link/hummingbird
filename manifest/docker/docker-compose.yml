@@ -10,13 +10,13 @@ services:
     hostname: mqtt-broker
     restart: always
     ports:
-      - "58090:58090"
+      - "127.0.0.1:58090:58090"
     networks:
       - hummingbird
   ekuiper:
     image: lfedge/ekuiper:1.10.0-slim
     ports:
-      - "9081:9081"
+      - "127.0.0.1:9081:9081"
     container_name: ekuiper
     hostname: ekuiper
     restart: always
@@ -46,4 +46,3 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - hummingbird
-

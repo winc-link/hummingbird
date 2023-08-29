@@ -1,5 +1,5 @@
 #  ----------------------------------------------------------------------------------
-#  Copyright 2018 Dell Technologies, Inc.
+#  Copyright 2018 hummingbird, J.
 #  Copyright 2018 Cavium
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");

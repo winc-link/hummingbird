@@ -1,0 +1,6 @@
+packages:
+  - admin
+  # - federation
+  - aplugin
+  # for external plugin, use full import path
+  # - gitlab.com/tedge/edgex/internal/thummingbird/mqttbroker/plugin/prometheus

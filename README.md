@@ -2,13 +2,6 @@
 	<img src="manifest/image/logo.png" width="100">
 <br>
 
-<a href='https://gitee.com/winc-link/hummingbird/stargazers'>
-    <img src='https://gitee.com/winc-link/hummingbird/badge/star.svg?theme=gvp' alt='star'></img>
-</a>
-<a href='https://gitee.com/winc-link/hummingbird/members'>
-    <img src='https://gitee.com/winc-link/hummingbird/badge/fork.svg?theme=gvp' alt='fork'></img>
-</a>
-<br>
 </p>
 
 # 产品简介

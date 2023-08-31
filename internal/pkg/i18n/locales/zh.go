@@ -124,6 +124,10 @@ func GetZhMessages() []*i18n.Message {
 			ID:    "20216",
 			Other: `docker镜像仓库不存在`,
 		},
+		{
+			ID:    "20217",
+			Other: `响应超时`,
+		},
 
 		// 驱动实例
 		{

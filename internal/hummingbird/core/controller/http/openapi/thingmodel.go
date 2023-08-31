@@ -63,6 +63,20 @@ func (ctl *controller) OpenApiDeleteThingModel(c *gin.Context) {
 	httphelper.ResultSuccess(nil, c.Writer, lc)
 }
 
+// OpenApiQueryDeviceEffectivePropertyData 查询设备实时属性
+func (ctl *controller) OpenApiQueryDeviceEffectivePropertyData(c *gin.Context) {
+	lc := ctl.lc
+	var req dtos.DeviceEffectivePropertyDataReq
+	urlDecodeParam(&req, c.Request, lc)
+	data, err := ctl.getDeviceApp().DeviceEffectivePropertyData(req)
+	if err != nil {
+		httphelper.RenderFail(c, err, c.Writer, lc)
+		return
+	}
+	httphelper.ResultSuccess(data, c.Writer, lc)
+}
+
+// OpenApiSetDeviceProperty 设备设备属性
 func (ctl *controller) OpenApiSetDeviceProperty(c *gin.Context) {
 	lc := ctl.lc
 	var req dtos.OpenApiSetDeviceThingModel
@@ -70,19 +84,12 @@ func (ctl *controller) OpenApiSetDeviceProperty(c *gin.Context) {
 		httphelper.RenderFail(c, errort.NewCommonErr(errort.DefaultReqParamsError, err), c.Writer, lc)
 		return
 	}
-
-	var code string
-	var value interface{}
-	for s, i := range req.Item {
-		code = s
-		value = i
+	err := ctl.getDeviceApp().SetDeviceProperty(req)
+	if err != nil {
+		httphelper.RenderFail(c, err, c.Writer, lc)
+		return
 	}
-	execRes := ctl.getDeviceApp().DeviceAction(dtos.JobAction{
-		DeviceId: req.DeviceId,
-		Code:     code,
-		Value:    value,
-	})
-	httphelper.ResultSuccess(execRes, c.Writer, lc)
+	httphelper.ResultSuccess(nil, c.Writer, lc)
 }
 
 func (ctl *controller) OpenApiInvokeThingService(c *gin.Context) {
@@ -92,9 +99,12 @@ func (ctl *controller) OpenApiInvokeThingService(c *gin.Context) {
 		httphelper.RenderFail(c, errort.NewCommonErr(errort.DefaultReqParamsError, err), c.Writer, lc)
 		return
 	}
-
-	execRes := ctl.getDeviceApp().DeviceInvokeThingService(req)
-	httphelper.ResultSuccess(execRes, c.Writer, lc)
+	data, err := ctl.getDeviceApp().DeviceInvokeThingService(req)
+	if err != nil {
+		httphelper.RenderFail(c, err, c.Writer, lc)
+		return
+	}
+	httphelper.ResultSuccess(data, c.Writer, lc)
 }
 
 func (ctl *controller) OpenApiQueryDevicePropertyData(c *gin.Context) {

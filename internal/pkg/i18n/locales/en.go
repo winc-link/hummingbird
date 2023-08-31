@@ -124,6 +124,10 @@ func GetEnMessages() []*i18n.Message {
 			ID:    "20216",
 			Other: `The docker image repository does not exist.`,
 		},
+		{
+			ID:    "20217",
+			Other: `Time out.`,
+		},
 
 		// 驱动实例
 		{

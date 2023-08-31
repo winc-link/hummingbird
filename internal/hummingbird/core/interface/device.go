@@ -58,7 +58,11 @@ type DeviceCtlItf interface {
 
 	DeviceAction(jobAction dtos.JobAction) dtos.DeviceExecRes
 
-	DeviceInvokeThingService(invokeDeviceServiceReq dtos.InvokeDeviceServiceReq) dtos.DeviceExecRes
+	DeviceInvokeThingService(invokeDeviceServiceReq dtos.InvokeDeviceServiceReq) (map[string]interface{}, error)
+
+	SetDeviceProperty(req dtos.OpenApiSetDeviceThingModel) error
+
+	DeviceEffectivePropertyData(deviceEffectivePropertyDataReq dtos.DeviceEffectivePropertyDataReq) (dtos.DeviceEffectivePropertyDataResponse, error)
 }
 
 type OpenApiDeviceItf interface {

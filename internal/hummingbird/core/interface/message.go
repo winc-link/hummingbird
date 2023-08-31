@@ -17,6 +17,7 @@ import (
 )
 
 type MessageStores interface {
+	StoreRange()
 	StoreMsgId(id string, ch string)
 	LoadMsgChan(id string) (interface{}, bool)
 	DeleteMsgId(id string)

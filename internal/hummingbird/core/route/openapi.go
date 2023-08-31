@@ -82,6 +82,8 @@ func RegisterOpenApi(engine *gin.Engine, dic *di.Container) {
 	}
 	//物模型使用的API
 	{
+		//查询设备实时属性数据。
+		v1.GET("/queryDeviceEffectivePropertyData", ctl.OpenApiQueryDeviceEffectivePropertyData)
 		//设置设备的属性。
 		v1.POST("/setDeviceProperty", ctl.OpenApiSetDeviceProperty)
 		//调用设备的服务。

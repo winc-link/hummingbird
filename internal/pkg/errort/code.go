@@ -27,11 +27,11 @@ const (
 	DeviceLibraryDockerAuthInvalid       uint32 = 20205
 	DeviceLibraryDockerImagesNotFound    uint32 = 20206
 	DeviceLibraryNotExist                uint32 = 20211
-	DeviceLibraryAtopDefaultConfig       uint32 = 20212
 	DeviceLibraryImageDownloadFail       uint32 = 20213
 	DeviceLibraryImageNotFound           uint32 = 20214
 	DeviceLibraryNotAllowDelete          uint32 = 20215
 	DockerImageRepositoryNotFound        uint32 = 20216
+	DeviceLibraryResponseTimeOut         uint32 = 20217
 
 	DeviceServiceMustDeleteDevice     uint32 = 20301
 	DeviceServiceMustStopService      uint32 = 20302

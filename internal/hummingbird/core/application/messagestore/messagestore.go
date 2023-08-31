@@ -46,6 +46,12 @@ func NewMessageStore(dic *di.Container) *MessageStore {
 	}
 }
 
+func (wp *MessageStore) StoreRange() {
+	wp.ackMap.Range(func(key, value any) bool {
+		return true
+	})
+}
+
 func (wp *MessageStore) StoreMsgId(id string, ch string) {
 	wp.ackMap.Store(id, ch)
 }

@@ -17,7 +17,6 @@ package persistence
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"github.com/winc-link/edge-driver-proto/thingmodel"
 	"github.com/winc-link/hummingbird/internal/dtos"
 	"github.com/winc-link/hummingbird/internal/hummingbird/core/application/messagestore"
@@ -112,6 +111,38 @@ func (pst *persistApp) saveDeviceThingModelToLevelDB(req dtos.ThingModelMessage)
 		if err != nil {
 			return err
 		}
+
+	case thingmodel.OperationType_PROPERTY_GET_RESPONSE:
+		msg, err := req.TransformMessageDataByGetProperty()
+		if err != nil {
+			return err
+		}
+		messageStore := resourceContainer.MessageStoreItfFrom(pst.dic.Get)
+		ack, ok := messageStore.LoadMsgChan(msg.MsgId)
+		if !ok {
+			//超时了。
+			return nil
+		}
+		if v, ok := ack.(*messagestore.MsgAckChan); ok {
+			v.TrySendDataAndCloseChan(msg.Data)
+			messageStore.DeleteMsgId(msg.MsgId)
+		}
+
+	case thingmodel.OperationType_PROPERTY_SET_RESPONSE:
+		msg, err := req.TransformMessageDataBySetProperty()
+		if err != nil {
+			return err
+		}
+		messageStore := resourceContainer.MessageStoreItfFrom(pst.dic.Get)
+		ack, ok := messageStore.LoadMsgChan(msg.MsgId)
+		if !ok {
+			//超时了。
+			return nil
+		}
+		if v, ok := ack.(*messagestore.MsgAckChan); ok {
+			v.TrySendDataAndCloseChan(msg.Data)
+			messageStore.DeleteMsgId(msg.MsgId)
+		}
 	case thingmodel.OperationType_SERVICE_EXECUTE_RESPONSE:
 		serviceMsg, err := req.TransformMessageDataByServiceExec()
 		if err != nil {
@@ -123,51 +154,61 @@ func (pst *persistApp) saveDeviceThingModelToLevelDB(req dtos.ThingModelMessage)
 			return err
 		}
 
-		product, err := pst.dbClient.ProductById(device.ProductId)
+		_, err = pst.dbClient.ProductById(device.ProductId)
 		if err != nil {
 			return err
 		}
 
-		var find bool
-		var callType constants.CallType
-
-		for _, action := range product.Actions {
-			if action.Code == serviceMsg.Code {
-				find = true
-				callType = action.CallType
-				break
-			}
+		//var find bool
+		//var callType constants.CallType
+		//
+		//for _, action := range product.Actions {
+		//	if action.Code == serviceMsg.Code {
+		//		find = true
+		//		callType = action.CallType
+		//		break
+		//	}
+		//}
+		//
+		//if !find {
+		//	return errors.New("")
+		//}
+		messageStore := resourceContainer.MessageStoreItfFrom(pst.dic.Get)
+		ack, ok := messageStore.LoadMsgChan(serviceMsg.MsgId)
+		if !ok {
+			//可能是超时了。
+			return nil
 		}
 
-		if !find {
-			return errors.New("")
+		if v, ok := ack.(*messagestore.MsgAckChan); ok {
+			v.TrySendDataAndCloseChan(serviceMsg.OutputParams)
+			messageStore.DeleteMsgId(serviceMsg.MsgId)
 		}
-
-		if callType == constants.CallTypeSync {
-			messageStore := resourceContainer.MessageStoreItfFrom(pst.dic.Get)
-			ack, ok := messageStore.LoadMsgChan(serviceMsg.MsgId)
-			if !ok {
-				//可能是超时了。
-				return nil
-			}
-
-			if v, ok := ack.(*messagestore.MsgAckChan); ok {
-				v.TrySendDataAndCloseChan(serviceMsg.OutputParams)
-				messageStore.DeleteMsgId(serviceMsg.MsgId)
-			}
-
-		} else if callType == constants.CallTypeAsync {
-			kvs := make(map[string]interface{})
-			var key string
-			key = generateActionLeveldbKey(req.Cid, serviceMsg.Code, serviceMsg.Time)
-			value, _ := serviceMsg.Marshal()
-			kvs[key] = value
-			err = pst.dataDbClient.Insert(context.Background(), "", kvs)
-
-			if err != nil {
-				return err
-			}
-		}
+		//if callType == constants.CallTypeSync {
+		//	messageStore := resourceContainer.MessageStoreItfFrom(pst.dic.Get)
+		//	ack, ok := messageStore.LoadMsgChan(serviceMsg.MsgId)
+		//	if !ok {
+		//		//可能是超时了。
+		//		return nil
+		//	}
+		//
+		//	if v, ok := ack.(*messagestore.MsgAckChan); ok {
+		//		v.TrySendDataAndCloseChan(serviceMsg.OutputParams)
+		//		messageStore.DeleteMsgId(serviceMsg.MsgId)
+		//	}
+		//
+		//} else if callType == constants.CallTypeAsync {
+		//	kvs := make(map[string]interface{})
+		//	var key string
+		//	key = generateActionLeveldbKey(req.Cid, serviceMsg.Code, serviceMsg.Time)
+		//	value, _ := serviceMsg.Marshal()
+		//	kvs[key] = value
+		//	err = pst.dataDbClient.Insert(context.Background(), "", kvs)
+		//
+		//	if err != nil {
+		//		return err
+		//	}
+		//}
 	case thingmodel.OperationType_DATA_BATCH_REPORT:
 		msg, err := req.TransformMessageDataByBatchReport()
 		if err != nil {
@@ -249,8 +290,63 @@ func (pst *persistApp) saveDeviceThingModelToTdengine(req dtos.ThingModelMessage
 		if err != nil {
 			return err
 		}
+
+	case thingmodel.OperationType_PROPERTY_GET_RESPONSE:
+		msg, err := req.TransformMessageDataByGetProperty()
+		if err != nil {
+			return err
+		}
+		messageStore := resourceContainer.MessageStoreItfFrom(pst.dic.Get)
+		ack, ok := messageStore.LoadMsgChan(msg.MsgId)
+		if !ok {
+			//超时了。
+			return nil
+		}
+		if v, ok := ack.(*messagestore.MsgAckChan); ok {
+			v.TrySendDataAndCloseChan(msg.Data)
+			messageStore.DeleteMsgId(msg.MsgId)
+		}
+	case thingmodel.OperationType_PROPERTY_SET_RESPONSE:
+		msg, err := req.TransformMessageDataBySetProperty()
+		if err != nil {
+			return err
+		}
+		messageStore := resourceContainer.MessageStoreItfFrom(pst.dic.Get)
+		ack, ok := messageStore.LoadMsgChan(msg.MsgId)
+		if !ok {
+			//超时了。
+			return nil
+		}
+		if v, ok := ack.(*messagestore.MsgAckChan); ok {
+			v.TrySendDataAndCloseChan(msg.Data)
+			messageStore.DeleteMsgId(msg.MsgId)
+		}
 	case thingmodel.OperationType_DATA_BATCH_REPORT:
 
+		msg, err := req.TransformMessageDataByBatchReport()
+		if err != nil {
+			return err
+		}
+		data := make(map[string]interface{})
+
+		for code, property := range msg.Data.Properties {
+			data[code] = property.Value
+		}
+		for code, event := range msg.Data.Events {
+			var eventData dtos.EventData
+			eventData.OutputParams = event.OutputParams
+			eventData.EventCode = code
+			eventData.EventTime = msg.Time
+			data[code] = eventData
+
+		}
+		//批量写。
+		err = pst.dataDbClient.Insert(context.Background(), constants.DB_PREFIX+req.Cid, data)
+
+		if err != nil {
+			return err
+		}
+		return nil
 	case thingmodel.OperationType_SERVICE_EXECUTE_RESPONSE:
 		serviceMsg, err := req.TransformMessageDataByServiceExec()
 		if err != nil {
@@ -262,48 +358,60 @@ func (pst *persistApp) saveDeviceThingModelToTdengine(req dtos.ThingModelMessage
 			return err
 		}
 
-		product, err := pst.dbClient.ProductById(device.ProductId)
+		_, err = pst.dbClient.ProductById(device.ProductId)
 		if err != nil {
 			return err
 		}
 
-		var find bool
-		var callType constants.CallType
+		//var find bool
+		//var callType constants.CallType
+		//
+		//for _, action := range product.Actions {
+		//	if action.Code == serviceMsg.Code {
+		//		find = true
+		//		callType = action.CallType
+		//		break
+		//	}
+		//}
+		//
+		//if !find {
+		//	return errors.New("")
+		//}
 
-		for _, action := range product.Actions {
-			if action.Code == serviceMsg.Code {
-				find = true
-				callType = action.CallType
-				break
-			}
+		messageStore := resourceContainer.MessageStoreItfFrom(pst.dic.Get)
+		ack, ok := messageStore.LoadMsgChan(serviceMsg.MsgId)
+		if !ok {
+			//可能是超时了。
+			return nil
 		}
 
-		if !find {
-			return errors.New("")
+		if v, ok := ack.(*messagestore.MsgAckChan); ok {
+			v.TrySendDataAndCloseChan(serviceMsg.OutputParams)
+			messageStore.DeleteMsgId(serviceMsg.MsgId)
 		}
 
-		if callType == constants.CallTypeSync {
-			messageStore := resourceContainer.MessageStoreItfFrom(pst.dic.Get)
-			ack, ok := messageStore.LoadMsgChan(serviceMsg.MsgId)
-			if !ok {
-				//可能是超时了。
-				return nil
-			}
-
-			if v, ok := ack.(*messagestore.MsgAckChan); ok {
-				v.TrySendDataAndCloseChan(serviceMsg.OutputParams)
-				messageStore.DeleteMsgId(serviceMsg.MsgId)
-			}
-
-		} else if callType == constants.CallTypeAsync {
-			v, _ := serviceMsg.Marshal()
-			data := make(map[string]interface{})
-			data[serviceMsg.Code] = string(v)
-			err = pst.dataDbClient.Insert(context.Background(), constants.DB_PREFIX+req.Cid, data)
-			if err != nil {
-				return err
-			}
-		}
+		//if callType == constants.CallTypeSync {
+		//	messageStore := resourceContainer.MessageStoreItfFrom(pst.dic.Get)
+		//	ack, ok := messageStore.LoadMsgChan(serviceMsg.MsgId)
+		//	if !ok {
+		//		//可能是超时了。
+		//		return nil
+		//	}
+		//
+		//	if v, ok := ack.(*messagestore.MsgAckChan); ok {
+		//		v.TrySendDataAndCloseChan(serviceMsg.OutputParams)
+		//		messageStore.DeleteMsgId(serviceMsg.MsgId)
+		//	}
+		//
+		//} else if callType == constants.CallTypeAsync {
+		//	v, _ := serviceMsg.Marshal()
+		//	data := make(map[string]interface{})
+		//	data[serviceMsg.Code] = string(v)
+		//	err = pst.dataDbClient.Insert(context.Background(), constants.DB_PREFIX+req.Cid, data)
+		//	if err != nil {
+		//		return err
+		//	}
+		//}
 
 	}
 	return nil

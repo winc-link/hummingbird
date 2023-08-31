@@ -2,3 +2,8 @@
 vendor
 logs
 go.sum
+manifest
+cmd/.DS_Store
+cmd/hummingbird-ui/.DS_Store
+hummingbird
+mqtt-broker

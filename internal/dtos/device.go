@@ -322,3 +322,18 @@ type InvokeDeviceServiceReq struct {
 	Code     string                 `json:"code"`
 	Items    map[string]interface{} `json:"inputParams"`
 }
+
+type DeviceEffectivePropertyDataReq struct {
+	DeviceId string   `json:"deviceId"`
+	Codes    []string `json:"codes"`
+}
+
+type DeviceEffectivePropertyDataResponse struct {
+	Data []EffectivePropertyData `json:"propertyInfo"`
+}
+
+type EffectivePropertyData struct {
+	Code  string      `json:"code"`
+	Value interface{} `json:"value"`
+	Time  int64       `json:"time"`
+}

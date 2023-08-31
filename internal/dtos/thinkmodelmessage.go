@@ -67,8 +67,20 @@ func (m *ThingModelMessage) IsPersistent() bool {
 	return isPersistent
 }
 
-func (m *ThingModelMessage) TransformMessageDataByProperty() (EdgeXDevicePropertyReport, error) {
-	var dataMsg EdgeXDevicePropertyReport
+func (m *ThingModelMessage) TransformMessageDataBySetProperty() (DevicePropertySetResponse, error) {
+	var dataMsg DevicePropertySetResponse
+	err := json.Unmarshal([]byte(m.Data), &dataMsg)
+	return dataMsg, err
+}
+
+func (m *ThingModelMessage) TransformMessageDataByGetProperty() (DeviceGetPropertyResponse, error) {
+	var dataMsg DeviceGetPropertyResponse
+	err := json.Unmarshal([]byte(m.Data), &dataMsg)
+	return dataMsg, err
+}
+
+func (m *ThingModelMessage) TransformMessageDataByProperty() (DevicePropertyReport, error) {
+	var dataMsg DevicePropertyReport
 	err := json.Unmarshal([]byte(m.Data), &dataMsg)
 	return dataMsg, err
 }
@@ -106,7 +118,7 @@ func ThingModelMessageFromThingModelMsg(msg *thingmodel.ThingModelMsg) ThingMode
 	}
 }
 
-type EdgeXDevicePropertyReport struct {
+type DevicePropertyReport struct {
 	MsgId   string `json:"msgId"`
 	Version string `json:"version"`
 	//Time    int64  `json:"time"`
@@ -114,6 +126,22 @@ type EdgeXDevicePropertyReport struct {
 		Ack int `json:"ack"`
 	} `json:"sys"`
 	Data map[string]ReportData `json:"data"`
+}
+
+type DeviceGetPropertyResponse struct {
+	MsgId string                  `json:"msgId"`
+	Data  []EffectivePropertyData `json:"data"`
+}
+
+type DevicePropertySetResponse struct {
+	MsgId string                `json:"msgId"`
+	Data  DevicePropertySetData `json:"data"`
+}
+
+type DevicePropertySetData struct {
+	ErrorMessage string `json:"errorMessage"`
+	Code         uint32 `json:"code"`
+	Success      bool   `json:"success"`
 }
 
 type DeviceBatchReport struct {
@@ -187,6 +215,18 @@ func (r *ServiceData) Marshal() ([]byte, error) {
 }
 
 func (r *InvokeDeviceService) ToString() string {
+	s, _ := json.Marshal(r)
+	return string(s)
+}
+
+type DeviceGetPropertyData struct {
+	MsgId   string   `json:"msgId"`
+	Version string   `json:"version"`
+	Time    int64    `json:"time"`
+	Data    []string `json:"data"`
+}
+
+func (r *DeviceGetPropertyData) ToString() string {
 	s, _ := json.Marshal(r)
 	return string(s)
 }

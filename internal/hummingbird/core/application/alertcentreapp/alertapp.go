@@ -800,36 +800,25 @@ func (p alertApp) AddAlert(ctx context.Context, req map[string]interface{}) erro
 		}
 	}
 
+	if alertRule.SilenceTime > 0 {
+		alertSend, err := p.dbClient.AlertListLastSend(alertRule.Id)
+		if err != nil {
+			if !errors.Is(err, gorm.ErrRecordNotFound) {
+				// 处理不是记录未找到的情况
+				return err
+			}
+		} else {
+			if alertSend.Created+alertRule.SilenceTime > utils.MakeTimestamp() {
+				// 在静默期内，不发送
+				return nil
+			}
+		}
+	}
+
 	var alertList models.AlertList
 	alertList.AlertRuleId = alertRule.Id
 	alertList.AlertResult = alertResult
 	alertList.TriggerTime = time.Now().UnixMilli()
-
-	send := false
-	if alertRule.SilenceTime > 0 {
-		alertSend, err := p.dbClient.AlertListLastSend(alertRule.Id)
-		if err != nil {
-			if err == gorm.ErrRecordNotFound {
-				send = true
-				goto Jump
-			}
-		} else {
-			if alertSend.Created+alertRule.SilenceTime <= utils.MakeTimestamp() {
-				send = true
-				goto Jump
-			}
-		}
-	}
-
-Jump:
-	if send == false {
-		alertList.IsSend = false
-		_, err = p.dbClient.AddAlertList(alertList)
-		if err != nil {
-			return err
-		}
-		return nil
-	}
 	alertList.IsSend = true
 	alertList.Status = constants.Untreated
 

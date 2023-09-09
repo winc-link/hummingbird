@@ -1,9 +1,15 @@
+## IDE
 .idea
+.vscode
+
+## golang
 vendor
 logs
 go.sum
-manifest
-cmd/.DS_Store
-cmd/hummingbird-ui/.DS_Store
-hummingbird
-mqtt-broker
+
+## MacOS
+.DS_Store
+
+## binary
+cmd/hummingbird-core/hummingbird-core
+cmd/mqtt-broker/mqtt-broker

@@ -132,6 +132,17 @@ func (p *deviceApp) SetDeviceProperty(req dtos.OpenApiSetDeviceThingModel) error
 	if err != nil {
 		return nil
 	}
+
+	_, err = p.dbClient.ProductById(device.ProductId)
+	if err != nil {
+		return nil
+	}
+	//var findCode bool
+	//
+	//for _, property := range product.Properties {
+	//	if property.Code
+	//}
+
 	deviceService, err := p.dbClient.DeviceServiceById(device.DriveInstanceId)
 	if err != nil {
 		return err
@@ -318,7 +329,9 @@ func (p *deviceApp) DeviceInvokeThingService(invokeDeviceServiceReq dtos.InvokeD
 		saveData.MsgId = data.MsgId
 		saveData.Code = invokeDeviceServiceReq.Code
 		saveData.Time = data.Time
-		saveData.InputParams = invokeDeviceServiceReq.Items
+		saveData.InputParams = make(map[string]interface{})
+		saveData.InputParams["code"] = invokeDeviceServiceReq.Code
+		saveData.InputParams["inputParams"] = invokeDeviceServiceReq.Items
 		//******
 
 		select {

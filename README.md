@@ -34,7 +34,15 @@
 
 # 官方文档
 
-官方文档地址：https://doc.hummingbird.winc-link.com/
+官方文档地址：https://doc.hummingbird.winc-link.com
+
+# 快速启动
+
+git clone https://github.com/winc-link/hummingbird.git
+
+cd hummingbird/manifest/docker 
+
+docker-compose up -d
 
 # 主要功能
 
@@ -72,7 +80,7 @@
 
 如果你在使用或者部署过程遇到任何问题，请在 QQ 群讨论或者联系作者微信。
 
-🌟 请记住我们不收费，代码完全开源，如果你想把蜂鸟物联网平台进行商用，请提前找作者授权！最后请点个 Start 鼓励我们吧！🌟
+如果你想把蜂鸟物联网平台进行商用，请提前找作者授权！最后请点个 Start 鼓励我们吧！🌟
 
 <p align="center">
 	<img src="manifest/image/jietu.png" width="600">
@@ -89,3 +97,9 @@
 # 开源协议
 
 `Hummingbird` 开源平台遵循 [Apache 2.0 协议](https://www.apache.org/licenses/LICENSE-2.0.html) 如果你想把蜂鸟物联网平台进行商用，请提前找作者授权！
+
+
+
+## Stargazers over time
+
+[![Stargazers over time](https://starchart.cc/winc-link/hummingbird.svg)](https://starchart.cc/winc-link/hummingbird)

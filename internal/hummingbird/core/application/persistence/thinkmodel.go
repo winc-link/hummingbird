@@ -148,17 +148,6 @@ func (pst *persistApp) saveDeviceThingModelToLevelDB(req dtos.ThingModelMessage)
 		if err != nil {
 			return err
 		}
-
-		device, err := pst.dbClient.DeviceById(req.Cid)
-		if err != nil {
-			return err
-		}
-
-		_, err = pst.dbClient.ProductById(device.ProductId)
-		if err != nil {
-			return err
-		}
-
 		//var find bool
 		//var callType constants.CallType
 		//

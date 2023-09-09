@@ -247,7 +247,7 @@ type ServiceExecResponse struct {
 	MsgId        string                 `json:"msgId"`
 	Code         string                 `json:"code"`
 	Time         int64                  `json:"time"`
-	OutputParams map[string]interface{} `json:"outputParams"`
+	OutputParams map[string]interface{} `json:"data"`
 }
 
 func (r *ServiceExecResponse) Marshal() ([]byte, error) {

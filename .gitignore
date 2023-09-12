@@ -6,6 +6,8 @@
 vendor
 logs
 go.sum
+hummingbird
+manifest
 
 ## MacOS
 .DS_Store

@@ -130,12 +130,12 @@ func (p *deviceApp) SetDeviceProperty(req dtos.OpenApiSetDeviceThingModel) error
 
 	device, err := p.dbClient.DeviceById(req.DeviceId)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	_, err = p.dbClient.ProductById(device.ProductId)
 	if err != nil {
-		return nil
+		return err
 	}
 	//var findCode bool
 	//

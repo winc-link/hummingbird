@@ -206,7 +206,7 @@ func (uapp *userApp) CreateTokenDetail(userName string) (*dtos.TokenDetail, erro
 		userID uint = 1
 		err    error
 	)
-	td.AccessToken, err = uapp.createToken(userID, userName, td.AtExpires, jwt2.OpenAPIKey)
+	td.AccessToken, err = uapp.createToken(userID, userName, td.AtExpires, jwt2.JwtSignKey)
 	if err != nil {
 		return nil, err
 	}

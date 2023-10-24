@@ -72,6 +72,7 @@ func (table *Device) TransformToDriverDevice() *driverdevice.Device {
 	driverDevice.Description = table.Description
 	driverDevice.Status = table.Status.TransformToDriverDeviceStatus()
 	driverDevice.ProductId = table.ProductId
+	driverDevice.Secret = table.Secret
 	driverDevice.Platform = table.Platform.TransformToDriverDevicePlatform()
 	return driverDevice
 }

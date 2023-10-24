@@ -50,10 +50,17 @@ type DockerManager struct {
 }
 
 type CustomParams struct {
-	env     []string
-	runtime string
-	net     string
-	mnt     []string
+	user       string
+	cpuShares  int64
+	memory     int64
+	memorySwap int64
+	dns        []string
+	dnsSearch  []string
+	restart    string
+	env        []string
+	runtime    string
+	mnt        []string
+	port       []string
 }
 
 // 镜像信息
@@ -184,7 +191,7 @@ func (dm *DockerManager) ContainerStart(imageRepo string, containerName string, 
 	//exposedPorts, portMap := dm.makeExposedPorts(exposePorts)
 	//resourceDevices := dm.makeMountDevices(mountDevices)
 	binds := make([]string, 0)
-	binds = append(binds, "/etc/localtime:/etc/localtime:ro") // 挂载时区
+	//binds = append(binds, "/etc/localtime:/etc/localtime:ro") // 挂载时区
 	var thisRunMode container.NetworkMode
 	if instanceType == constants.CloudInstance {
 
@@ -205,16 +212,26 @@ func (dm *DockerManager) ContainerStart(imageRepo string, containerName string, 
 	dm.lc.Infof("binds: %+v", binds)
 	dm.lc.Infof("Image:%+v", dm.ImageMap[imageRepo])
 	dm.lc.Infof("thisRunMode:%+v", string(thisRunMode))
-	_, cErr := dm.cli.ContainerCreate(dm.ctx, &container.Config{
-		Image: imageRepo,
-		Env:   dockerCustomParams.env,
+
+	portMap := generateExposedPorts(dockerCustomParams.port)
+	restartPolicy := generateRestartPolicy(dockerCustomParams.restart)
+	resources := generateResources(dockerCustomParams.cpuShares, dockerCustomParams.memory, dockerCustomParams.memorySwap)
+
+	var _, cErr = dm.cli.ContainerCreate(dm.ctx, &container.Config{
+		OpenStdin: true,
+		Tty:       true,
+		User:      dockerCustomParams.user,
+		Image:     imageRepo,
+		Env:       dockerCustomParams.env,
 	}, &container.HostConfig{
-		Binds:       binds,
-		NetworkMode: thisRunMode,
-		RestartPolicy: container.RestartPolicy{
-			MaximumRetryCount: 10,
-		},
-		Runtime: dockerCustomParams.runtime,
+		DNS:           dockerCustomParams.dns,
+		DNSSearch:     dockerCustomParams.dnsSearch,
+		Resources:     resources,
+		Binds:         binds,
+		PortBindings:  portMap,
+		NetworkMode:   thisRunMode,
+		RestartPolicy: restartPolicy,
+		Runtime:       dockerCustomParams.runtime,
 	}, &network.NetworkingConfig{}, nil, containerName)
 	if cErr != nil {
 		return "", cErr
@@ -237,46 +254,75 @@ func (dm *DockerManager) ContainerStart(imageRepo string, containerName string, 
 		return "", errort.NewCommonEdgeX(errort.DefaultSystemError, "GetContainerRunStatus Fail", err)
 	}
 	if status != constants.ContainerRunStatusRunning {
-		err = errort.NewCommonEdgeX(errort.ContainerRunFail, fmt.Sprintf("%s container status %s", containerName, status), nil)
+		err = errort.NewCommonEdgeX(errort.ContainerRunFail, fmt.Sprintf("%s container status %s please check the log for specific details", containerName, status), nil)
+		return
 	}
 	if thisRunMode.IsHost() {
 		ip = constants.HostAddress
 	} else {
 		ip, err = dm.GetContainerIp(containerName)
 	}
-
 	return
 }
 
-// 端口导出组装
-func (dm *DockerManager) makeExposedPorts(exposePorts []int) (nat.PortSet, nat.PortMap) {
-	portMap := make(nat.PortMap)
-	exposedPorts := make(nat.PortSet, 0)
-	var empty struct{}
-	for _, p := range exposePorts {
-		tmpPort, _ := nat.NewPort("tcp", strconv.Itoa(p))
-		portMap[tmpPort] = []nat.PortBinding{
-			{
-				HostIP:   "",
-				HostPort: strconv.Itoa(p),
-			},
+func generateRestartPolicy(restart string) container.RestartPolicy {
+	if restart != "" {
+		ls := strings.Split(restart, ":")
+		if len(ls) == 2 {
+			maximumRetryCount, err := strconv.Atoi(ls[1])
+			if err != nil {
+				maximumRetryCount = 0
+			}
+			return container.RestartPolicy{
+				Name:              ls[0],
+				MaximumRetryCount: maximumRetryCount,
+			}
+		} else if len(ls) == 1 {
+			return container.RestartPolicy{
+				Name: ls[0],
+			}
 		}
-		exposedPorts[tmpPort] = empty
 	}
-	return exposedPorts, portMap
+	return container.RestartPolicy{}
 }
 
-// 挂载设备组装
-func (dm *DockerManager) makeMountDevices(devices []string) container.Resources {
-	resourceDevices := make([]container.DeviceMapping, 0)
-	for _, v := range devices {
-		resourceDevices = append(resourceDevices, container.DeviceMapping{
-			PathOnHost:        v,
-			PathInContainer:   v,
-			CgroupPermissions: "rwm",
-		})
+func generateResources(cpuShares, memory, memorySwap int64) container.Resources {
+	return container.Resources{
+		CPUShares:  cpuShares,
+		Memory:     memory,
+		MemorySwap: memorySwap,
 	}
-	return container.Resources{Devices: resourceDevices}
+}
+
+// makeExposedPorts pots => [8080:8080/tcp 8090:8090/udp]
+func generateExposedPorts(ports []string) nat.PortMap {
+	portMap := make(nat.PortMap)
+	for _, port := range ports {
+
+		proto := "tcp"
+
+		sp := strings.Split(port, ":")
+		if len(sp) != 2 {
+			return portMap
+		}
+
+		parsePortRange := strings.Split(sp[1], "/")
+
+		if len(parsePortRange) == 2 {
+			proto = strings.ToLower(parsePortRange[1])
+			if proto != "tcp" && proto != "udp" {
+				continue
+			}
+		}
+		tmpPort, _ := nat.NewPort(proto, parsePortRange[0])
+		portMap[tmpPort] = []nat.PortBinding{
+			{
+				HostIP:   "0.0.0.0",
+				HostPort: sp[0],
+			},
+		}
+	}
+	return portMap
 }
 
 func (dm *DockerManager) ContainerStop(containerIdOrName string) error {
@@ -498,16 +544,17 @@ func (dm *DockerManager) GetAuthToken(username string, password string, serverAd
 
 // 自定义docker启动参数解析
 func (dm *DockerManager) ParseCustomParams(cmd string) (CustomParams, error) {
-	runMode := dm.dcm.DockerManageConfig.DockerRunMode
-	if !utils.InStringSlice(runMode, []string{
-		constants.NetworkModeHost, constants.NetworkModeBridge,
-	}) {
-		runMode = constants.NetworkModeHost
-	}
 	params := CustomParams{
-		runtime: "",
-		env:     []string{},
-		net:     runMode,
+		user:      "",
+		cpuShares: 0,
+		memory:    0,
+		dns:       []string{},
+		dnsSearch: []string{},
+		restart:   "",
+		env:       []string{},
+		runtime:   "",
+		port:      []string{},
+		mnt:       []string{},
 	}
 	if cmd == "" {
 		return params, nil
@@ -518,32 +565,25 @@ func (dm *DockerManager) ParseCustomParams(cmd string) (CustomParams, error) {
 	for _, v := range strArr {
 		args = append(args, strings.Split(v, " ")...)
 	}
-	f := flag.NewFlagSet("edge-flag", flag.ContinueOnError)
-	f.StringVarP(&params.runtime, "runtime", "", "", "")
-	f.StringVarP(&params.net, "net", "", runMode, "")
+	f := flag.NewFlagSet("", flag.ContinueOnError)
+	f.StringVarP(&params.user, "user", "u", "", "")
+	f.Int64VarP(&params.cpuShares, "cpu-shares", "c", 0, "")
+	f.Int64VarP(&params.memory, "memory", "m", 0, "")
+	f.Int64VarP(&params.memorySwap, "memory-swap", "", -1, "")
+	f.StringArrayVarP(&params.dns, "dns", "", []string{}, "")
+	f.StringArrayVarP(&params.dnsSearch, "dns-search", "", []string{}, "")
+	f.StringVarP(&params.restart, "restart", "", "on-failure:10", "")
 	f.StringArrayVarP(&params.env, "env", "e", []string{}, "")
-	f.StringArrayVarP(&params.mnt, "mnt", "v", []string{}, "")
+	f.StringVarP(&params.runtime, "runtime", "", "", "")
+	f.StringArrayVarP(&params.port, "publish", "p", []string{}, "")
+	f.StringArrayVarP(&params.mnt, "volume", "v", []string{}, "")
+
 	err := f.Parse(args)
 	if err != nil {
 		return CustomParams{}, errort.NewCommonErr(errort.DockerParamsParseErr, fmt.Errorf("parse docker params err:%v", err))
 	}
-
-	// 内部限制只支持host和bridge两种模式
-	if !utils.InStringSlice(params.net, []string{
-		constants.NetworkModeHost, constants.NetworkModeBridge,
-	}) {
-		params.net = runMode
-	}
 	return params, nil
-}
 
-// 自定义docker启动参数解析
-func (dm *DockerManager) ParseCustomParamsIsRunBridge(cmd string) (bool, error) {
-	params, err := dm.ParseCustomParams(cmd)
-	if err != nil {
-		return false, err
-	}
-	return container.NetworkMode(params.net).IsBridge(), nil
 }
 
 func (dm *DockerManager) GetAllImagesIds() []string {

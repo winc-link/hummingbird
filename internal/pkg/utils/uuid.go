@@ -15,8 +15,6 @@ func GenUUID() string {
 }
 
 func RandomNum() string {
-	//n, _ := rand.Int(rand.Reader, big.NewInt(100000000))
-	//return n.String()
 	return fmt.Sprintf("%08v", rand2.New(rand2.NewSource(time.Now().UnixNano())).Int31n(100000000))
 }
 

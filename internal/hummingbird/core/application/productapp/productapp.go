@@ -157,11 +157,11 @@ func (p *productApp) AddProduct(ctx context.Context, req dtos.ProductAddRequest)
 			properties, events, actions = dtos.GetModelPropertyEventActionByThingModelTemplate(thingModelTemplateInfo.ThingModelJSON)
 		}
 	}
-
+	secret := utils.GenerateDeviceSecret(15)
 	var insertProduct models.Product
 	insertProduct.Id = utils.RandomNum()
 	insertProduct.Name = req.Name
-	insertProduct.CloudProductId = utils.GenerateDeviceSecret(15)
+	insertProduct.CloudProductId = secret
 	insertProduct.Platform = constants.IotPlatform_LocalIot
 	insertProduct.Protocol = req.Protocol
 	insertProduct.NodeType = constants.ProductNodeType(req.NodeType)
@@ -169,7 +169,7 @@ func (p *productApp) AddProduct(ctx context.Context, req dtos.ProductAddRequest)
 	insertProduct.DataFormat = req.DataFormat
 	insertProduct.Factory = req.Factory
 	insertProduct.Description = req.Description
-	insertProduct.Key = req.Key
+	insertProduct.Key = secret
 	insertProduct.Status = constants.ProductUnRelease
 	insertProduct.Properties = properties
 	insertProduct.Events = events

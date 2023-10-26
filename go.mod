@@ -49,7 +49,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.617
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.617
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.39
-	github.com/winc-link/edge-driver-proto v0.0.0-20231023113502-daf15ee41883
+	github.com/winc-link/edge-driver-proto v0.0.0-20231026095244-f5aaece7aee1
 	github.com/xuri/excelize/v2 v2.5.0
 	go.uber.org/atomic v1.9.0
 	go.uber.org/zap v1.21.0

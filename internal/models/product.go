@@ -59,6 +59,7 @@ func (d *Product) TransformToDriverProduct() *driverproduct.Product {
 	driverProduct.Platform = d.Platform.TransformToDriverDevicePlatform()
 	driverProduct.NetType = d.NetType.TransformToDriverProductNetType()
 	driverProduct.ProtocolType = d.Protocol
+	driverProduct.Key = d.Key
 	driverProduct.CreateAt = uint64(d.Created)
 	var p []*driverproduct.Properties
 	var e []*driverproduct.Events

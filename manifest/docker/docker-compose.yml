@@ -31,7 +31,7 @@ services:
     networks:
       - hummingbird
   hummingbird-core:
-    image: registry.cn-shanghai.aliyuncs.com/winc-link/hummingbird-core:1.0
+    image: registry.cn-shanghai.aliyuncs.com/winc-link/hummingbird-core:v1.0
     container_name: hummingbird-core
     restart: always
     hostname: hummingbird-core

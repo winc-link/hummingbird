@@ -26,15 +26,6 @@
 | ![](manifest/image/5.png)                                               | ![](manifest/image/6.png)                                                   |
 | ![](manifest/image/7.png)                                               | ![](manifest/image/8.png)                                                   |
 
-# 在线演示
-
-演示地址：https://demo.winc-link.com
-账号：admin
-密码：123456
-
-# 官方文档
-
-官方文档地址：https://doc.hummingbird.winc-link.com
 
 # 快速启动
 

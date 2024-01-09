@@ -22,14 +22,14 @@
 
 | ![](manifest/image/1.png)                                               | ![](manifest/image/2.png)                                                   |
 |:------------------------------------------------------------------------|:----------------------------------------------------------------------------|
-| ![](manifest/image/3.png))                                              | ![](manifest/image/4.png)                                                   |
+| ![](manifest/image/3.png)                                             | ![](manifest/image/4.png)                                                   |
 | ![](manifest/image/5.png)                                               | ![](manifest/image/6.png)                                                   |
 | ![](manifest/image/7.png)                                               | ![](manifest/image/8.png)                                                   |
 
 
 # 快速启动
 
-git clone https://github.com/winc-link/hummingbird.git
+git clone https://gitee.com/winc-link/hummingbird.git
 
 cd hummingbird/manifest/docker 
 

@@ -26,6 +26,8 @@
 | ![](manifest/image/5.png)                                               | ![](manifest/image/6.png)                                                   |
 | ![](manifest/image/7.png)                                               | ![](manifest/image/8.png)                                                   |
 
+# 官方文档地址
+https://doc.hummingbird.winc-link.com/
 
 # 快速启动
 

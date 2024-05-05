@@ -105,7 +105,7 @@ func GetRuleSceneEkuiperActions(actionUrl string) []Actions {
 	var a []Actions
 	rest := make(map[string]interface{})
 	rest["method"] = "POST"
-	rest["url"] = actionUrl + "/api/v1/ekuiper/scene"
+	rest["url"] = "http://hummingbird-core:58081" + "/api/v1/ekuiper/scene"
 	rest["bodyType"] = "json"
 	rest["timeout"] = 5000
 	rest["runAsync"] = false

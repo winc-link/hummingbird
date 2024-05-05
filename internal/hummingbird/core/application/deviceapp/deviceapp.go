@@ -162,6 +162,9 @@ func (p *deviceApp) AddDevice(ctx context.Context, req dtos.DeviceAddRequest) (s
 	if err != nil {
 		return "", err
 	}
+	go func() {
+		p.CreateDeviceCallBack(insertDevice)
+	}()
 	return id, nil
 }
 
@@ -310,7 +313,7 @@ func (p *deviceApp) DevicesUnBindDriver(ctx context.Context, req dtos.DevicesUnB
 	return nil
 }
 
-//DevicesBindProductId
+// DevicesBindProductId
 func (p *deviceApp) DevicesBindProductId(ctx context.Context, req dtos.DevicesBindProductId) error {
 	var searchReq dtos.DeviceSearchQueryRequest
 	searchReq.ProductId = req.ProductId

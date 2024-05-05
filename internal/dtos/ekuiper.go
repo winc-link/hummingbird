@@ -87,6 +87,7 @@ func GetRuleAlertEkuiperActions(actionUrl string) []Actions {
 	var a []Actions
 	rest := make(map[string]interface{})
 	rest["method"] = "POST"
+	//bug-fix
 	rest["url"] = "http://hummingbird-core:58081" + "/api/v1/ekuiper/alert"
 	rest["bodyType"] = "json"
 	rest["timeout"] = 5000

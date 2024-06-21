@@ -14,8 +14,8 @@ services:
     networks:
       - hummingbird
   ekuiper:
-    #image: lfedge/ekuiper:1.10.0-slim
-    image: registry.cn-shanghai.aliyuncs.com/winc-link/ekuiper:1.10.0-slim
+    image: lfedge/ekuiper:1.10.0-slim
+    #image: registry.cn-shanghai.aliyuncs.com/winc-link/ekuiper:1.10.0-slim
     ports:
       - "127.0.0.1:9081:9081"
     container_name: ekuiper

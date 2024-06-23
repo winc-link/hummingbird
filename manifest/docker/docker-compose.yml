@@ -5,12 +5,15 @@ networks:
     driver: bridge
 services:
   mqtt-broker:
-    image: registry.cn-shanghai.aliyuncs.com/winc-link/mqtt-broker:v1.0
+    image: emqx/nanomq:0.21
     container_name: mqtt-broker
     hostname: mqtt-broker
     restart: always
+    volumes:
+      - ./logs:/data/logs
+      - ./conf/nanomq.conf:/etc/nanomq.conf
     ports:
-      - "127.0.0.1:58090:58090"
+      - "127.0.0.1:1883:1883"
     networks:
       - hummingbird
   ekuiper:
@@ -26,7 +29,7 @@ services:
       - ./kuiper/data:/kuiper/data
       - ./kuiper/log:/kuiper/log
     environment:
-      MQTT_SOURCE__DEFAULT__SERVER: "tcp://mqtt-broker:58090"
+      MQTT_SOURCE__DEFAULT__SERVER: "tcp://mqtt-broker:1883"
       KUIPER__BASIC__CONSOLELOG: "true"
       KUIPER__BASIC__IGNORECASE: "false"
     networks:

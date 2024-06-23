@@ -14,3 +14,6 @@ hummingbird
 ## binary
 cmd/hummingbird-core/hummingbird-core
 cmd/mqtt-broker/mqtt-broker
+
+kuiper
+db-data/leveldb-core-data

@@ -25,7 +25,7 @@ services:
       - ./kuiper/data:/kuiper/data
       - ./kuiper/log:/kuiper/log
     environment:
-      MQTT_SOURCE__DEFAULT__SERVER: "tcp://mqtt-broker:1883"
+      MQTT_SOURCE__DEFAULT__SERVER: "tcp://mqtt-broker:58090"
       KUIPER__BASIC__CONSOLELOG: "true"
       KUIPER__BASIC__IGNORECASE: "false"
     networks:

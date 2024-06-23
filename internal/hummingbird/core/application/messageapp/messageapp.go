@@ -29,7 +29,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
+	
 	pkgMQTT "github.com/winc-link/hummingbird/internal/tools/mqttclient"
 )
 
@@ -38,15 +38,17 @@ type MessageApp struct {
 	lc                logger.LoggingClient
 	dbClient          interfaces.DBClient
 	ekuiperMqttClient pkgMQTT.MQTTClient
+	ekuiperaddr       string
 }
 
-func NewMessageApp(dic *di.Container) *MessageApp {
+func NewMessageApp(dic *di.Container, ekuiperaddr string) *MessageApp {
 	lc := container.LoggingClientFrom(dic.Get)
 	dbClient := coreContainer.DBClientFrom(dic.Get)
 	msgApp := &MessageApp{
-		dic:      dic,
-		dbClient: dbClient,
-		lc:       lc,
+		dic:         dic,
+		dbClient:    dbClient,
+		lc:          lc,
+		ekuiperaddr: ekuiperaddr,
 	}
 	mqttClient := msgApp.connectMQTT()
 	msgApp.ekuiperMqttClient = mqttClient
@@ -59,12 +61,12 @@ func (tmq *MessageApp) initeKuiperStreams() {
 	r := make(map[string]string)
 	r["sql"] = "CREATE STREAM mqtt_stream () WITH (DATASOURCE=\"eventbus/in\", FORMAT=\"JSON\",SHARED = \"true\")"
 	b, _ := json.Marshal(r)
-	resp, err := req.Post("http://ekuiper:9081/streams", b)
+	resp, err := req.Post(tmq.ekuiperaddr, b)
 	if err != nil {
 		tmq.lc.Errorf("init ekuiper stream failed error:%+v", err.Error())
 		return
 	}
-
+	
 	if resp.StatusCode() == 201 {
 		body, err := resp.Body()
 		if err != nil {
@@ -82,13 +84,11 @@ func (tmq *MessageApp) initeKuiperStreams() {
 			tmq.lc.Errorf("init ekuiper stream failed error:%+v", err.Error())
 			return
 		}
-
+		
 		if strings.Contains(string(body), "already exists") {
 			tmq.lc.Infof("init ekuiper stream plug success")
 			return
 		}
-	} else {
-		tmq.lc.Errorf("init ekuiper stream failed resp code:%+v", resp.StatusCode())
 	}
 }
 
@@ -102,7 +102,7 @@ func (tmq *MessageApp) DeviceStatusToMessageBus(ctx context.Context, deviceId, d
 	}
 	b, _ := json.Marshal(messageBus)
 	tmq.pushMsgToMessageBus(b)
-
+	
 }
 func (tmq *MessageApp) ThingModelMsgReport(ctx context.Context, msg dtos.ThingModelMessage) (*drivercommon.CommonResponse, error) {
 	tmq.pushMsgToMessageBus(msg.TransformMessageBus())

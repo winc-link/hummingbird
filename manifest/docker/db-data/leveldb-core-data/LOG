@@ -1,0 +1,39 @@
+=============== Jun 23, 2024 (UTC) ===============
+07:28:50.576890 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+07:28:50.595517 db@open opening
+07:28:50.601758 version@stat F·[] S·0B[] Sc·[]
+07:28:50.606910 db@janitor F·2 G·0
+07:28:50.608077 db@open done T·11.719649ms
+07:28:52.124654 db@close closing
+07:28:52.125660 db@close done T·1.005394ms
+=============== Jun 23, 2024 (UTC) ===============
+07:28:58.402544 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+07:28:58.415412 version@stat F·[] S·0B[] Sc·[]
+07:28:58.416824 db@open opening
+07:28:58.418046 journal@recovery F·1
+07:28:58.419128 journal@recovery recovering @1
+07:28:58.430863 version@stat F·[] S·0B[] Sc·[]
+07:28:58.545419 db@janitor F·2 G·0
+07:28:58.547729 db@open done T·129.962204ms
+07:49:44.007188 db@close closing
+07:49:44.008431 db@close done T·1.252401ms
+=============== Jun 23, 2024 (UTC) ===============
+07:52:54.060168 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+07:52:54.070750 version@stat F·[] S·0B[] Sc·[]
+07:52:54.071563 db@open opening
+07:52:54.072563 journal@recovery F·1
+07:52:54.073517 journal@recovery recovering @2
+07:52:54.080468 version@stat F·[] S·0B[] Sc·[]
+07:52:54.117002 db@janitor F·2 G·0
+07:52:54.117872 db@open done T·45.529864ms
+07:52:54.740007 db@close closing
+07:52:54.741617 db@close done T·1.607086ms
+=============== Jun 23, 2024 (UTC) ===============
+07:52:59.485349 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+07:52:59.496162 version@stat F·[] S·0B[] Sc·[]
+07:52:59.497367 db@open opening
+07:52:59.499105 journal@recovery F·1
+07:52:59.500621 journal@recovery recovering @4
+07:52:59.511912 version@stat F·[] S·0B[] Sc·[]
+07:52:59.534086 db@janitor F·2 G·0
+07:52:59.535315 db@open done T·36.592228ms

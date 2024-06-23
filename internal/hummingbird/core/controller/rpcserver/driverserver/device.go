@@ -52,7 +52,7 @@ func (s *DriverDeviceServer) GetDeviceConnectStatus(ctx context.Context, request
 
 func (s *DriverDeviceServer) QueryDeviceList(ctx context.Context, request *device.QueryDeviceListRequest) (*device.QueryDeviceListResponse, error) {
 	deviceItf := container.DeviceItfFrom(s.dic.Get)
-
+	
 	var platform string
 	if request.BaseRequest.UseCloudPlatform {
 		platform = string(constants.TransformEdgePlatformToDbPlatform(request.BaseRequest.GetCloudInstanceInfo().GetIotPlatform()))
@@ -81,7 +81,7 @@ func (s *DriverDeviceServer) QueryDeviceList(ctx context.Context, request *devic
 
 func (s *DriverDeviceServer) QueryDeviceById(ctx context.Context, request *device.QueryDeviceByIdRequest) (*device.QueryDeviceByIdResponse, error) {
 	deviceItf := container.DeviceItfFrom(s.dic.Get)
-
+	
 	deviceInfo, err := deviceItf.DeviceModelById(ctx, request.Id)
 	response := new(device.QueryDeviceByIdResponse)
 	response.BaseResponse = new(drivercommon.CommonResponse)
@@ -110,13 +110,13 @@ func (s *DriverDeviceServer) CreateDevice(ctx context.Context, request *device.C
 		response.BaseResponse.ErrorMessage = errWrapper.Message()
 		return response, nil
 	}
-
+	
 	var insertDevice dtos.DeviceAddRequest
 	insertDevice.ProductId = productInfo.Id
 	insertDevice.Platform = constants.IotPlatform_LocalIot
 	insertDevice.Name = request.Device.Name
 	insertDevice.DriverInstanceId = request.BaseRequest.GetDriverInstanceId()
-
+	
 	deviceId, err := deviceItf.AddDevice(ctx, insertDevice)
 	if err != nil {
 		errWrapper := errort.NewCommonEdgeXWrapper(err)
@@ -125,16 +125,19 @@ func (s *DriverDeviceServer) CreateDevice(ctx context.Context, request *device.C
 		response.BaseResponse.ErrorMessage = errWrapper.Message()
 		return response, nil
 	}
+	deviceInfo, _ := deviceItf.DeviceById(ctx, deviceId)
 	response.BaseResponse.Success = true
 	response.Data = new(device.CreateDeviceRequestResponse_Data)
 	response.Data.Devices = new(device.Device)
 	response.Data.Devices.Id = deviceId
 	response.Data.Devices.Name = request.Device.Name
-	response.Data.Devices.Description = request.Device.Description
 	response.Data.Devices.ProductId = request.Device.ProductId
+	response.Data.Devices.DeviceSn = request.Device.DeviceSn
+	response.Data.Devices.External = request.Device.External
+	response.Data.Devices.Secret = deviceInfo.Secret
+	response.Data.Devices.Description = request.Device.Description
 	response.Data.Devices.Status = device.DeviceStatus_OffLine
 	response.Data.Devices.Platform = drivercommon.IotPlatform_LocalIot
-
 	return response, nil
 }
 

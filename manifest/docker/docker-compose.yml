@@ -5,20 +5,16 @@ networks:
     driver: bridge
 services:
   mqtt-broker:
-    image: emqx/nanomq:0.21
+    image: registry.cn-shanghai.aliyuncs.com/winc-link/mqtt-broker:2.6
     container_name: mqtt-broker
     hostname: mqtt-broker
     restart: always
-    volumes:
-      - ./logs:/data/logs
-      - ./conf/nanomq.conf:/etc/nanomq.conf
     ports:
-      - "127.0.0.1:1883:1883"
+      - "58090:58090"
     networks:
       - hummingbird
   ekuiper:
-    image: lfedge/ekuiper:1.10.0-slim
-    #image: registry.cn-shanghai.aliyuncs.com/winc-link/ekuiper:1.10.0-slim
+    image: registry.cn-shanghai.aliyuncs.com/winc-link/ekuiper:1.10.0-slim
     ports:
       - "127.0.0.1:9081:9081"
     container_name: ekuiper

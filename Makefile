@@ -11,3 +11,12 @@ cmd/mqtt-broker/mqtt-broker:
 
 generate/api:
 	cd cmd/hummingbird-core && swag init --parseDependency --parseInternal --parseDepth 10
+
+.PHONY: start
+start:
+	go run cmd/hummingbird-core/main.go -c cmd/hummingbird-core/res/configuration.toml
+
+.PHONY: build
+build:
+	docker buildx build --platform linux/amd64 -t "您的仓库地址" -f cmd/hummingbird/Dockerfile --push .
+

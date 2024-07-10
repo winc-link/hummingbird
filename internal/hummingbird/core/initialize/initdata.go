@@ -16,107 +16,136 @@ package initialize
 
 import (
 	"context"
-	"github.com/winc-link/hummingbird/internal/hummingbird/core/container"
+	"encoding/json"
+	"github.com/kirinlabs/HttpRequest"
+	"github.com/winc-link/hummingbird/internal/hummingbird/core/config"
 	pkgContainer "github.com/winc-link/hummingbird/internal/pkg/container"
 	"github.com/winc-link/hummingbird/internal/pkg/di"
-	"github.com/winc-link/hummingbird/internal/pkg/errort"
 	"github.com/winc-link/hummingbird/internal/pkg/logger"
+	"strings"
 	"sync"
+	"time"
 )
 
-func initApp(ctx context.Context, dic *di.Container) bool {
+func initApp(ctx context.Context, configuration *config.ConfigurationStruct, dic *di.Container) bool {
 	lc := pkgContainer.LoggingClientFrom(dic.Get)
-	dbClient := container.DBClientFrom(dic.Get)
-	_, edgeXErr := dbClient.GetUserByUserName("admin")
-	if edgeXErr != nil {
-		if errort.Is(errort.AppPasswordError, edgeXErr) {
-			var wg sync.WaitGroup
-			wg.Add(6)
-			go syncQuickNavigation(&wg, dic, lc)
-			go syncDocTemplate(&wg, dic, lc)
-			go syncUnitTemplate(&wg, dic, lc)
-			go syncCategory(&wg, dic, lc)
-			go syncThingModel(&wg, dic, lc)
-			go syncDocuments(&wg, dic, lc)
-			//go initEkuiperStreams(&wg, dic, lc)
-			wg.Wait()
-			lc.Infof("initApp end...")
-		}
-
-	}
+	go initEkuiperStreams(dic, lc, configuration)
 	return true
 }
 
-func syncCategory(wg *sync.WaitGroup, dic *di.Container, lc logger.LoggingClient) {
-	defer wg.Done()
-	categoryApp := container.CategoryTemplateAppFrom(dic.Get)
-
-	_, err := categoryApp.Sync(context.Background(), "Ireland")
-	lc.Infof("sync category start...")
+func initEkuiperStreams(dic *di.Container, lc logger.LoggingClient, configuration *config.ConfigurationStruct) {
+	// time 10s 以保证ekuiper初始化完成
+	time.Sleep(10 * time.Second)
+	req := HttpRequest.NewRequest()
+	r := make(map[string]string)
+	r["sql"] = "CREATE STREAM mqtt_stream () WITH (DATASOURCE=\"eventbus/in\", FORMAT=\"JSON\",SHARED = \"true\")"
+	b, _ := json.Marshal(r)
+	url := configuration.Clients["Ekuiper"].Address() + "/streams"
+	resp, err := req.Post(url, b)
 	if err != nil {
-		lc.Errorf("sync category fail...")
+		lc.Errorf("init ekuiper stream failed error:%+v", err.Error())
+		return
 	}
-	lc.Infof("sync category success")
+	lc.Infof("init ekuiper stream start")
+	lc.Info("ekuiper stream start resp code", resp.StatusCode())
 
+	if resp.StatusCode() == 201 {
+		body, err := resp.Body()
+		if err != nil {
+			lc.Errorf("init ekuiper stream failed error:%+v", err.Error())
+			return
+		}
+		if strings.Contains(string(body), "created") {
+			lc.Infof("init ekuiper stream success")
+			return
+		}
+	} else if resp.StatusCode() == 400 {
+		body, err := resp.Body()
+		lc.Infof("init ekuiper stream body", string(body))
+		if err != nil {
+			lc.Errorf("init ekuiper stream failed error:%+v", err.Error())
+			return
+		}
+
+		if strings.Contains(string(body), "already exists") {
+			lc.Infof("init ekuiper stream plug success")
+			return
+		}
+	} else {
+		lc.Errorf("init ekuiper stream failed resp code:%+v", resp.StatusCode())
+	}
 }
 
-func syncUnitTemplate(wg *sync.WaitGroup, dic *di.Container, lc logger.LoggingClient) {
+func DownloadEkuiperKafkaPlug(wg *sync.WaitGroup, dic *di.Container, lc logger.LoggingClient) {
 	defer wg.Done()
-	unitTempApp := container.UnitTemplateAppFrom(dic.Get)
-
-	_, err := unitTempApp.Sync(context.Background(), "Ireland")
-	lc.Infof("sync unit start")
-
+	req := HttpRequest.NewRequest()
+	kafkaPlug := make(map[string]string)
+	kafkaPlug["name"] = "kafka"
+	kafkaPlug["file"] = "https://packages.emqx.net/kuiper-plugins/1.10.0/debian/sinks/kafka_amd64.zip"
+	b, _ := json.Marshal(kafkaPlug)
+	resp, err := req.Post("http://ekuiper:9081/plugins/sinks", b)
 	if err != nil {
-		lc.Errorf("sync unit fail")
+		lc.Errorf("down ekuiper kafka plug failed error:%+v", err.Error())
 	}
-	lc.Infof("sync unit success")
-
+	if resp.StatusCode() == 201 {
+		body, err := resp.Body()
+		if err != nil {
+			lc.Errorf("down ekuiper kafka plug failed error:%+v", err.Error())
+			return
+		}
+		if strings.Contains(string(body), "created") {
+			lc.Infof("down ekuiper kafka plug success")
+			return
+		}
+	} else if resp.StatusCode() == 400 {
+		body, err := resp.Body()
+		if err != nil {
+			lc.Errorf("down ekuiper kafka plug failed error:%+v", err.Error())
+			return
+		}
+		if strings.Contains(string(body), "duplicate") {
+			lc.Infof("down ekuiper kafka plug success")
+			return
+		}
+	} else {
+		lc.Errorf("down ekuiper kafka plug failed resp code:%+v", resp.StatusCode())
+	}
 }
 
-func syncDocTemplate(wg *sync.WaitGroup, dic *di.Container, lc logger.LoggingClient) {
+func DownloadEkuiperTdenginePlug(wg *sync.WaitGroup, dic *di.Container, lc logger.LoggingClient) {
 	defer wg.Done()
-	docApp := container.DocsTemplateAppFrom(dic.Get)
+	req := HttpRequest.NewRequest()
+	kafkaPlug := make(map[string]interface{})
+	kafkaPlug["name"] = "tdengine"
+	kafkaPlug["file"] = "https://packages.emqx.net/kuiper-plugins/1.10.0/debian/sinks/tdengine_amd64.zip"
+	kafkaPlug["shellParas"] = []string{"2.4.0.26"}
 
-	_, err := docApp.SyncDocs(context.Background(), "Ireland")
-	lc.Infof("sync doc start")
-
+	b, _ := json.Marshal(kafkaPlug)
+	resp, err := req.Post("http://ekuiper:9081/plugins/sinks", b)
 	if err != nil {
-		lc.Errorf("sync doc fail")
+		lc.Errorf("down ekuiper tdengine plug failed error:%+v", err.Error())
 	}
-	lc.Infof("sync doc success")
-
-}
-
-func syncQuickNavigation(wg *sync.WaitGroup, dic *di.Container, lc logger.LoggingClient) {
-	defer wg.Done()
-	quickApp := container.QuickNavigationAppTemplateAppFrom(dic.Get)
-	_, err := quickApp.SyncQuickNavigation(context.Background(), "Ireland")
-	lc.Infof("sync quickNavigation start")
-	if err != nil {
-		lc.Errorf("sync quickNavigation fail...", err.Error())
+	if resp.StatusCode() == 201 {
+		body, err := resp.Body()
+		if err != nil {
+			lc.Errorf("down ekuiper tdengine plug failed error:%+v", err.Error())
+			return
+		}
+		if strings.Contains(string(body), "created") {
+			lc.Infof("down ekuiper tdengine plug success")
+			return
+		}
+	} else if resp.StatusCode() == 400 {
+		body, err := resp.Body()
+		if err != nil {
+			lc.Errorf("down ekuiper tdengine plug failed error:%+v", err.Error())
+			return
+		}
+		if strings.Contains(string(body), "duplicate") {
+			lc.Infof("down ekuiper tdengine plug success")
+			return
+		}
+	} else {
+		lc.Errorf("down ekuiper tdengine plug failed resp code:%+v", resp.StatusCode())
 	}
-	lc.Infof("sync quickNavigation success")
-}
-
-func syncThingModel(wg *sync.WaitGroup, dic *di.Container, lc logger.LoggingClient) {
-	defer wg.Done()
-	thingModelApp := container.ThingModelTemplateAppFrom(dic.Get)
-	_, err := thingModelApp.Sync(context.Background(), "Ireland")
-	lc.Infof("sync thingModel start")
-	if err != nil {
-		lc.Errorf("sync thingModel fail...", err.Error())
-	}
-	lc.Infof("sync thingModel success")
-}
-
-func syncDocuments(wg *sync.WaitGroup, dic *di.Container, lc logger.LoggingClient) {
-	defer wg.Done()
-	languageApp := container.LanguageAppNameFrom(dic.Get)
-	err := languageApp.Sync(context.Background(), "Ireland")
-	lc.Infof("sync language start")
-	if err != nil {
-		lc.Errorf("sync language fail...", err.Error())
-	}
-	lc.Infof("sync language success")
 }

@@ -43,7 +43,6 @@ func (ctl *controller) DeviceLibrariesSearch(c *gin.Context) {
 	}
 	dtos.CorrectionPageParam(&req.BaseSearchConditionQuery)
 
-	//req2 := dtos.FromDeviceLibrarySearchQueryRequestToRpc(req)
 	list, total, edgeXErr := ctl.getDriverLibApp().DeviceLibrariesSearch(c, req)
 	if edgeXErr != nil {
 		httphelper.RenderFail(c, edgeXErr, c.Writer, lc)

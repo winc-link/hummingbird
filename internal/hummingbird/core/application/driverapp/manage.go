@@ -185,7 +185,13 @@ func (m *deviceLibraryManager) updateDLDefaultVersion(dl models.DeviceLibrary, n
 
 func (m *deviceLibraryManager) downloadVersion(dl models.DeviceLibrary, dc models.DockerConfig, version string) (string, error) {
 	// 3.下载应用
-	imageId, err := m.appModel.DownApp(dtos.DockerConfigFromModel(dc), dtos.DeviceLibraryFromModel(dl), version)
+	var cfg dtos.DockerConfig
+	if dl.IsInternal {
+		cfg = dtos.WincLinkDockerConfig()
+	} else {
+		cfg = dtos.DockerConfigFromModel(dc)
+	}
+	imageId, err := m.appModel.DownApp(cfg, dtos.DeviceLibraryFromModel(dl), version)
 	if err != nil {
 		return "", err
 	}

@@ -121,13 +121,9 @@ type DeviceLibraryResponse struct {
 
 func DeviceLibraryResponseFromModel(dl models.DeviceLibrary) DeviceLibraryResponse {
 	// 如果docker镜像id为空，那么返回给前端的版本为 `-`
-	if dl.DockerImageId == "" {
+	if dl.DockerImageId == "" && !dl.IsInternal {
 		dl.Version = "-"
 	}
-	//if dl.ConfigFile != "" {
-	//    dl.ConfigFile = path.Base(dl.ConfigFile)
-	//}
-
 	return DeviceLibraryResponse{
 		Id:            dl.Id,
 		Name:          dl.Name,

@@ -11,11 +11,12 @@ func (app *driverLibApp) GetDeviceLibraryAndMirrorConfig(dlId string) (dl models
 	}
 
 	// 2.获取docker仓库配置
-	dc, err = app.dbClient.DockerConfigById(dl.DockerConfigId)
-	if err != nil {
-		app.lc.Errorf("2.DeviceLibraryOperate docker hub, id:%s, DockerConfigId:%s, err:%v", dlId, dl.DockerConfigId, err)
-		return
+	if !dl.IsInternal {
+		dc, err = app.dbClient.DockerConfigById(dl.DockerConfigId)
+		if err != nil {
+			app.lc.Errorf("2.DeviceLibraryOperate docker hub, id:%s, DockerConfigId:%s, err:%v", dlId, dl.DockerConfigId, err)
+			return
+		}
 	}
-
 	return
 }

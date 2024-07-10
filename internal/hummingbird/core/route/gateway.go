@@ -76,6 +76,8 @@ func RegisterGateway(engine *gin.Engine, dic *di.Container) {
 		v1Auth.GET("device-libraries", ctl.DeviceLibrariesSearch)
 		v1Auth.DELETE("device-libraries/:deviceLibraryId", ctl.DeviceLibraryDelete)
 		v1Auth.PUT("device-libraries/:deviceLibraryId", ctl.DeviceLibraryUpdate)
+		v1Auth.GET("driver-classify", ctl.DeviceClassify)
+
 	}
 	/*******驱动实例 *******/
 	{

@@ -30,12 +30,12 @@ Timeout = 120
 [Databases.Metadata]
 [Databases.Metadata.Primary]
 Type = 'sqlite'
-DataSource = 'hummingbird/db-data/core-data/core.db?_timeout=5000'
+DataSource = 'manifest/docker/db-data/core-data/core.db?_timeout=5000'
 
 [Databases.Data]
 [Databases.Data.Primary]
 Type = 'leveldb'
-DataSource = 'hummingbird/db-data/leveldb-core-data/'
+DataSource = 'manifest/docker/db-data/leveldb-core-data/'
 
 [MessageQueue]
 Protocol = 'tcp'

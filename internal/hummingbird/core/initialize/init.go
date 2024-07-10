@@ -78,39 +78,43 @@ func NewBootstrap(router *gin.Engine) *Bootstrap {
 }
 
 func (b *Bootstrap) BootstrapHandler(ctx context.Context, wg *sync.WaitGroup, _ startup.Timer, dic *di.Container) bool {
-	
+
 	configuration := container.ConfigurationFrom(dic.Get)
 	lc := pkgContainer.LoggingClientFrom(dic.Get)
-	
+
 	if !b.initClient(ctx, wg, dic, configuration, lc) {
 		return false
 	}
-	
+
+	if !initApp(ctx, configuration, dic) {
+		return false
+	}
+
 	// rpc 服务
 	if ok := initRPCServer(ctx, wg, dic); !ok {
 		return false
 	}
 	lc.Infof("init rpc server")
-	
+
 	// http 路由
 	route.LoadRestRoutes(b.router, dic)
-	
+
 	// 业务逻辑
 	application.InitSchedule(dic, lc)
-	
+
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		
+
 		<-ctx.Done()
 		crontab.Stop()
 	}()
-	
+
 	return true
 }
 
 func (b *Bootstrap) initClient(ctx context.Context, wg *sync.WaitGroup, dic *di.Container, configuration *config.ConfigurationStruct, lc logger.LoggingClient) bool {
-	
+
 	appMode, err := dmi.New(dic, ctx, wg, dtos.DriverConfigManage{
 		DockerManageConfig: dtos.DockerManageConfig{
 			ContainerConfigPath: configuration.DockerManage.ContainerConfigPath,
@@ -124,7 +128,7 @@ func (b *Bootstrap) initClient(ctx context.Context, wg *sync.WaitGroup, dic *di.
 		lc.Error("create driver model interface error %v", err)
 		return false
 	}
-	
+
 	dic.Update(di.ServiceConstructorMap{
 		interfaces.DriverModelInterfaceName: func(get di.Get) interface{} {
 			return appMode
@@ -136,147 +140,147 @@ func (b *Bootstrap) initClient(ctx context.Context, wg *sync.WaitGroup, dic *di.
 			return homePageApp
 		},
 	})
-	
+
 	languageApp := languagesdkapp.NewLanguageSDKApp(ctx, dic)
 	dic.Update(di.ServiceConstructorMap{
 		container.LanguageSDKAppName: func(get di.Get) interface{} {
 			return languageApp
 		},
 	})
-	
+
 	monitorApp := monitor.NewMonitor(ctx, dic)
 	dic.Update(di.ServiceConstructorMap{
 		container.MonitorAppName: func(get di.Get) interface{} {
 			return monitorApp
 		},
 	})
-	
+
 	streamClient := streamclient.NewStreamClient(lc)
 	dic.Update(di.ServiceConstructorMap{
 		pkgContainer.StreamClientName: func(get di.Get) interface{} {
 			return streamClient
 		},
 	})
-	
+
 	driverApp := driverapp.NewDriverApp(ctx, dic)
 	dic.Update(di.ServiceConstructorMap{
 		container.DriverAppName: func(get di.Get) interface{} {
 			return driverApp
 		},
 	})
-	
+
 	driverServiceApp := driverserviceapp.NewDriverServiceApp(ctx, dic)
 	dic.Update(di.ServiceConstructorMap{
 		container.DriverServiceAppName: func(get di.Get) interface{} {
 			return driverServiceApp
 		},
 	})
-	
+
 	productApp := productapp.NewProductApp(ctx, dic)
 	dic.Update(di.ServiceConstructorMap{
 		container.ProductAppName: func(get di.Get) interface{} {
 			return productApp
 		},
 	})
-	
+
 	thingModelApp := thingmodelapp.NewThingModelApp(ctx, dic)
 	dic.Update(di.ServiceConstructorMap{
 		container.ThingModelAppName: func(get di.Get) interface{} {
 			return thingModelApp
 		},
 	})
-	
+
 	deviceApp := deviceapp.NewDeviceApp(ctx, dic)
 	dic.Update(di.ServiceConstructorMap{
 		container.DeviceItfName: func(get di.Get) interface{} {
 			return deviceApp
 		},
 	})
-	
+
 	alertCentreApp := alertcentreapp.NewAlertCentreApp(ctx, dic)
 	dic.Update(di.ServiceConstructorMap{
 		container.AlertRuleAppName: func(get di.Get) interface{} {
 			return alertCentreApp
 		},
 	})
-	
+
 	ruleEngineApp := ruleengine.NewRuleEngineApp(ctx, dic)
 	dic.Update(di.ServiceConstructorMap{
 		container.RuleEngineAppName: func(get di.Get) interface{} {
 			return ruleEngineApp
 		},
 	})
-	
+
 	sceneApp := scene.NewSceneApp(ctx, dic)
 	dic.Update(di.ServiceConstructorMap{
 		container.SceneAppName: func(get di.Get) interface{} {
 			return sceneApp
 		},
 	})
-	
+
 	conJobApp := timerapp.NewCronTimer(ctx, jobrunner.NewJobRunFunc(dic), dic)
 	dic.Update(di.ServiceConstructorMap{
 		container.ConJobAppName: func(get di.Get) interface{} {
 			return conJobApp
 		},
 	})
-	
+
 	dataResourceApp := dataresource.NewDataResourceApp(ctx, dic)
 	dic.Update(di.ServiceConstructorMap{
 		container.DataResourceName: func(get di.Get) interface{} {
 			return dataResourceApp
 		},
 	})
-	
+
 	cosApp := cos.NewCos("", "", "")
 	dic.Update(di.ServiceConstructorMap{
 		container.CosAppName: func(get di.Get) interface{} {
 			return cosApp
 		},
 	})
-	
+
 	categoryTemplateApp := categorytemplate.NewCategoryTemplateApp(ctx, dic)
 	dic.Update(di.ServiceConstructorMap{
 		container.CategoryTemplateAppName: func(get di.Get) interface{} {
 			return categoryTemplateApp
 		},
 	})
-	
+
 	unitTemplateApp := unittemplate.NewUnitTemplateApp(ctx, dic)
 	dic.Update(di.ServiceConstructorMap{
 		container.UnitTemplateAppName: func(get di.Get) interface{} {
 			return unitTemplateApp
 		},
 	})
-	
+
 	docsApp := docapp.NewDocsApp(ctx, dic)
 	dic.Update(di.ServiceConstructorMap{
 		container.DocsAppName: func(get di.Get) interface{} {
 			return docsApp
 		},
 	})
-	
+
 	quickNavigationApp := quicknavigationapp.NewQuickNavigationApp(ctx, dic)
 	dic.Update(di.ServiceConstructorMap{
 		container.QuickNavigationAppName: func(get di.Get) interface{} {
 			return quickNavigationApp
 		},
 	})
-	
+
 	thingModelTemplateApp := thingmodeltemplate.NewThingModelTemplateApp(ctx, dic)
 	dic.Update(di.ServiceConstructorMap{
 		container.ThingModelTemplateAppName: func(get di.Get) interface{} {
 			return thingModelTemplateApp
 		},
 	})
-	
+
 	hpcloudServiceApp := hpcloudclient.NewHpcloud(lc)
 	dic.Update(di.ServiceConstructorMap{
 		container.HpcServiceAppName: func(get di.Get) interface{} {
 			return hpcloudServiceApp
 		},
 	})
-	
+
 	smsServiceApp := sms.NewSmsClient(lc, "",
 		"", "")
 	dic.Update(di.ServiceConstructorMap{
@@ -284,21 +288,21 @@ func (b *Bootstrap) initClient(ctx context.Context, wg *sync.WaitGroup, dic *di.
 			return smsServiceApp
 		},
 	})
-	
+
 	limitMethodApp := application.NewLimitMethodConf(*configuration)
 	dic.Update(di.ServiceConstructorMap{
 		pkgContainer.LimitMethodConfName: func(get di.Get) interface{} {
 			return limitMethodApp
 		},
 	})
-	
+
 	ekuiperApp := ekuiperclient.New(configuration.Clients["Ekuiper"].Address(), lc)
 	dic.Update(di.ServiceConstructorMap{
 		container.EkuiperAppName: func(get di.Get) interface{} {
 			return ekuiperApp
 		},
 	})
-	
+
 	//agentApp := agentclient.New(configuration.Clients["Agent"].Address())
 	//dic.Update(di.ServiceConstructorMap{
 	//	container.AgentClientName: func(get di.Get) interface{} {
@@ -312,28 +316,28 @@ func (b *Bootstrap) initClient(ctx context.Context, wg *sync.WaitGroup, dic *di.
 	//		return cacheClient
 	//	},
 	//})
-	
+
 	persistItf := persistence.NewPersistApp(dic)
 	dic.Update(di.ServiceConstructorMap{
 		container.PersistItfName: func(get di.Get) interface{} {
 			return persistItf
 		},
 	})
-	
+
 	userItf := userapp.New(dic)
 	dic.Update(di.ServiceConstructorMap{
 		container.UserItfName: func(get di.Get) interface{} {
 			return userItf
 		},
 	})
-	
+
 	messageItf := messageapp.NewMessageApp(dic, configuration.Clients["Ekuiper"].Address())
 	dic.Update(di.ServiceConstructorMap{
 		container.MessageItfName: func(get di.Get) interface{} {
 			return messageItf
 		},
 	})
-	
+
 	messageStoreItf := messagestore.NewMessageStore(dic)
 	dic.Update(di.ServiceConstructorMap{
 		container.MessageStoreItfName: func(get di.Get) interface{} {

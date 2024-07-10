@@ -18,5 +18,5 @@ start:
 
 .PHONY: build
 build:
-	docker buildx build --platform linux/amd64 -t "您的仓库地址" -f cmd/hummingbird/Dockerfile --push .
+	docker buildx build --platform linux/amd64 -t "" -f cmd/hummingbird-core/Dockerfile --push .
 

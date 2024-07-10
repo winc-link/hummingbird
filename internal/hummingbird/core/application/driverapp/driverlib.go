@@ -138,17 +138,6 @@ func (app *driverLibApp) DeleteDeviceLibraryById(ctx context.Context, id string)
 		return errort.NewCommonErr(errort.DeviceLibraryMustDeleteDeviceService, fmt.Errorf("must delete service"))
 	}
 
-	// 删除驱动前需要查看 驱动所属的产品是否存在
-	//_, total, edgeXErr = app.dbClient.ProductsSearch(0, 1, dtos.ProductSearchQueryRequest{
-	//    DeviceLibraryId: id,
-	//})
-	//if edgeXErr != nil {
-	//    return edgeXErr
-	//}
-	//if total > 0 {
-	//    return errort.NewCommonErr(errort.DeviceLibraryMustDeleteProduct, fmt.Errorf("must delete product"))
-	//}
-
 	app.manager.Remove(id)
 
 	return nil

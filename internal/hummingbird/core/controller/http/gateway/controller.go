@@ -99,10 +99,6 @@ func (ctl *controller) getHomePageApp() interfaces.HomePageItf {
 	return container.HomePageAppNameFrom(ctl.dic.Get)
 }
 
-func (ctl *controller) getSystemApp() interfaces.SystemItf {
-	return container.SystemItfFrom(ctl.dic.Get)
-}
-
 func (ctl *controller) getDocsApp() interfaces.DocsApp {
 	return container.DocsTemplateAppFrom(ctl.dic.Get)
 }

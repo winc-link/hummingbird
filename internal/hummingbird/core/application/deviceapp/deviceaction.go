@@ -29,11 +29,6 @@ import (
 	"time"
 )
 
-const (
-	ResultSuccess = "success"
-	ResultFail    = "fail"
-)
-
 // ui控制台、定时任务、场景联动、云平台api 都可以调用
 func (p *deviceApp) DeviceAction(jobAction dtos.JobAction) dtos.DeviceExecRes {
 	defer func() {
@@ -137,11 +132,6 @@ func (p *deviceApp) SetDeviceProperty(req dtos.OpenApiSetDeviceThingModel) error
 	if err != nil {
 		return err
 	}
-	//var findCode bool
-	//
-	//for _, property := range product.Properties {
-	//	if property.Code
-	//}
 
 	deviceService, err := p.dbClient.DeviceServiceById(device.DriveInstanceId)
 	if err != nil {

@@ -46,13 +46,8 @@ func RegisterGateway(engine *gin.Engine, dic *di.Container) {
 		v1Auth.GET("home-page", ctl.HomePage)
 	}
 	{
-		/******* 运维管理-agentclient *******/
+		/******* 运维监控 *******/
 		v1Auth.GET("/metrics/system", ctl.SystemMetricsHandler)
-	}
-
-	/*******云服实例*******/
-	{
-		v1Auth.GET("cloud-instance", ctl.CloudInstanceSearch)
 	}
 
 	/******* 镜像仓库管理 *******/
@@ -100,10 +95,9 @@ func RegisterGateway(engine *gin.Engine, dic *di.Container) {
 		v1Auth.PUT("thingmodel", ctl.ThingModelUpdate)
 		v1Auth.DELETE("thingmodel", ctl.ThingModelDelete)
 		v1Auth.GET("thingmodel/unit", ctl.ThingModelUnit)
-		v1Auth.POST("thingmodel/unit-sync", ctl.ThingModelUnitSync)
-		v1Auth.POST("thingmodel/docs-sync", ctl.ThingModelDocsSync)
-		v1Auth.POST("thingmodel/quicknavigation-sync", ctl.ThingModelQuickNavigationSync)
-		//v1Auth.POST("thingmodel/msg-gather", ctl.MsgGather)
+		v1Auth.POST("thingmodel/unit-sync", ctl.ThingModelUnitSync)                       //废弃
+		v1Auth.POST("thingmodel/docs-sync", ctl.ThingModelDocsSync)                       //废弃
+		v1Auth.POST("thingmodel/quicknavigation-sync", ctl.ThingModelQuickNavigationSync) //废弃
 
 	}
 
@@ -133,10 +127,10 @@ func RegisterGateway(engine *gin.Engine, dic *di.Container) {
 	/*******品类、物模型同步接口 *******/
 	{
 		v1Auth.GET("category-template", ctl.CategoryTemplateSearch)
-		v1Auth.POST("category-template/sync", ctl.CategoryTemplateSync)
+		v1Auth.POST("category-template/sync", ctl.CategoryTemplateSync) //废弃
 		v1Auth.GET("thingmodel-template", ctl.ThingModelTemplateSearch)
 		v1Auth.GET("thingmodel-template/:categoryKey", ctl.ThingModelTemplateByCategoryKey)
-		v1Auth.POST("thingmodel-template/sync", ctl.ThingModelTemplateSync)
+		v1Auth.POST("thingmodel-template/sync", ctl.ThingModelTemplateSync) //废弃
 	}
 
 	/*******告警中心接口 *******/
@@ -195,7 +189,7 @@ func RegisterGateway(engine *gin.Engine, dic *di.Container) {
 	{
 
 		v1Auth.GET("language-sdk", ctl.LanguageSdkSearch)
-		v1Auth.POST("language-sdk-sync", ctl.LanguageSdkSync)
+		v1Auth.POST("language-sdk-sync", ctl.LanguageSdkSync) //废弃
 	}
 
 }

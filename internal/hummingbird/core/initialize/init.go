@@ -303,20 +303,6 @@ func (b *Bootstrap) initClient(ctx context.Context, wg *sync.WaitGroup, dic *di.
 		},
 	})
 
-	//agentApp := agentclient.New(configuration.Clients["Agent"].Address())
-	//dic.Update(di.ServiceConstructorMap{
-	//	container.AgentClientName: func(get di.Get) interface{} {
-	//		return agentApp
-	//	},
-	//})
-	//
-	//cacheClient := localcache.NewRamCacheClient()
-	//dic.Update(di.ServiceConstructorMap{
-	//	pkgContainer.CacheFuncName: func(get di.Get) interface{} {
-	//		return cacheClient
-	//	},
-	//})
-
 	persistItf := persistence.NewPersistApp(dic)
 	dic.Update(di.ServiceConstructorMap{
 		container.PersistItfName: func(get di.Get) interface{} {

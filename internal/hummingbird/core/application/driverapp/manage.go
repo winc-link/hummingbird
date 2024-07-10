@@ -173,12 +173,6 @@ func getNewSupportVersion(versions models.SupportVersions, curVersion, newVersio
 }
 
 func (m *deviceLibraryManager) updateDLDefaultVersion(dl models.DeviceLibrary, newVersion models.SupportVersion) models.DeviceLibrary {
-	// 2.驱动库配置更新为新版本的
-	//dl.Config = newVersion.ConfigJson
-	//if dl.Config == "" {
-	//	dl.Config = dtos.GetLibrarySimpleBaseConfig()
-	//}
-	//dl.ConfigFile = newVersion.ConfigFile
 	dl.Version = newVersion.Version
 	return dl
 }

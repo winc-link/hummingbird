@@ -180,10 +180,7 @@ func (et *EdgeTimer) run() {
 			timer.Stop()
 			now = now.In(et.location)
 			et.logger.Infof("wake now: %+v with jobID: %s", now, et.entries[0].JobID)
-			var (
-			//finished []int
-			//eIndex   = len(et.entries) - 1
-			)
+			var ()
 			for i, e := range et.entries {
 				if e.Next.After(now) || e.Next.IsZero() {
 					break
@@ -200,32 +197,11 @@ func (et *EdgeTimer) run() {
 					if next, b := e.Schedule.Next(now); !b {
 						e.Next = next
 						et.logger.Infof("run now: %+v, entry: jobId: %s, jobName: %s, next: %+v", now, e.JobID, e.Schedule.JobName, e.Next)
-						// update prev next and runtimes
-						//if err := et.db.UpdateRuntimeInfo(e.JobID, e.Prev.UnixMilli(), e.Next.UnixMilli(), times); err != nil {
-						//	et.logger.Errorf("update job: %s runtime info error: %s, prev: %d, next: %d",
-						//		e.JobID, err, e.Prev.Unix(), e.Next.Unix())
-						//}
 					}
 					//}
 				}
 			}
-			//if len(finished) > 0 {
-			//	for i := range finished {
-			//		et.entries[finished[i]], et.entries[eIndex] = et.entries[eIndex], et.entries[finished[i]]
-			//		eIndex--
-			//	}
-			//	del := et.entries[eIndex+1:]
-			//	ids := make([]string, 0, len(del))
-			//	for i := range del {
-			//		ids = append(ids, del[i].JobID)
-			//	}
-			//	et.logger.Infof("jobs ended, delete from db: %+v", ids)
-			//	if err := et.db.DeleteJobs(ids); err != nil {
-			//		et.logger.Errorf("jobs ended, delete from db failure: %+v", ids)
-			//	}
-			//	et.entries = et.entries[:eIndex+1]
-			//}
-			//et.logger.Infof("entries len: %d", len(et.entries))
+
 		case newEntry := <-et.add:
 			timer.Stop()
 			now = et.now()
@@ -299,14 +275,6 @@ func (et *EdgeTimer) AddJobToRunQueue(j *jobs.JobSchedule) error {
 		et.logger.Warnf("job is already in map: %s", j.JobID)
 		return nil
 	}
-	// check expire
-	//if exp, ok := j.TimeData.Expression.(jobs.CronExp); !ok {
-	//	return errort.NewCommonErr(errort.DefaultSystemError, fmt.Errorf("cron job expression error"))
-	//} else {
-	//	if _, err := jobs.ParseStandard(exp.CronTab); err != nil {
-	//		return err
-	//	}
-	//}
 
 	if _, err := jobs.ParseStandard(j.TimeData.Expression); err != nil {
 		return err

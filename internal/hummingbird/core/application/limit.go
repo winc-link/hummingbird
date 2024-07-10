@@ -11,7 +11,6 @@ type LimitMethodConf struct {
 	methods map[string]struct{}
 }
 
-//TODO: 接口限流功能需要重构
 func NewLimitMethodConf(configuration config.ConfigurationStruct) limit.LimitMethodConf {
 	var conf = &LimitMethodConf{methods: make(map[string]struct{})}
 	for _, method := range configuration.Writable.LimitMethods {

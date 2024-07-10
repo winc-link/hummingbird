@@ -69,8 +69,7 @@ type SystemThingModelSearchReq struct {
 }
 
 type OpenApiThingModelProperties struct {
-	Id string `json:"id"`
-	//ProductId   string          `json:"product_id"`  // 产品ID
+	Id          string          `json:"id"`
 	Name        string          `json:"name"`        // 属性名称
 	Code        string          `json:"code"`        // 标识符
 	AccessMode  string          `json:"access_mode"` // 数据传输类型
@@ -80,8 +79,7 @@ type OpenApiThingModelProperties struct {
 }
 
 type OpenApiThingModelEvents struct {
-	Id string `json:"id"`
-	//ProductId    string              `json:"product_id"`
+	Id           string              `json:"id"`
 	EventType    string              `json:"event_type"`
 	Name         string              `json:"name"` // 功能名称
 	Code         string              `json:"code"` // 标识符
@@ -91,8 +89,7 @@ type OpenApiThingModelEvents struct {
 }
 
 type OpenApiThingModelServices struct {
-	Id string `json:"id"`
-	//ProductId    string              `json:"product_id"`
+	Id           string              `json:"id"`
 	Name         string              `json:"name"` // 功能名称
 	Code         string              `json:"code"` // 标识符
 	Description  string              `json:"description"`

@@ -7,7 +7,6 @@ package dtos
 
 import (
 	"encoding/json"
-	"github.com/winc-link/hummingbird/internal/models"
 	//"gitlab.com/tedge/edgex/internal/models"
 )
 
@@ -34,30 +33,6 @@ type ServiceStats struct {
 	LogPath     string `json:"log_path"` // 日志地址, 宿主主机日志路径
 	Started     string `json:"started"`  // 服务最近启动时间
 	ServiceType string `json:"service_type" binding:"required"`
-}
-
-func FromModelsServiceStatsToDTO(s models.ServiceStats) ServiceStats {
-	return ServiceStats{
-		Id:          s.Id,
-		Name:        s.Name,
-		Healthy:     s.Healthy,
-		Created:     s.Created,
-		Started:     s.Started,
-		LogPath:     s.LogPath,
-		ServiceType: s.ServiceType,
-	}
-}
-
-func FromDTOServiceStatsToModel(s ServiceStats) models.ServiceStats {
-	return models.ServiceStats{
-		Id:          s.Id,
-		Name:        s.Name,
-		Healthy:     s.Healthy,
-		Created:     s.Created,
-		Started:     s.Started,
-		LogPath:     s.LogPath,
-		ServiceType: s.ServiceType,
-	}
 }
 
 type Logging struct {
@@ -90,14 +65,6 @@ type Metrics struct {
 	Timestamp      int64   `json:"timestamp"`      // 时间戳
 	CpuUsedPercent float64 `json:"cpuUsedPercent"` // cpu 使用率百分比
 	MemoryUsed     int64   `json:"memoryUsed"`     // 内存使用大小，单位:字节
-}
-
-func FromModelsMetricsToDTO(m models.Metrics) Metrics {
-	return Metrics{
-		Timestamp:      m.Timestamp,
-		CpuUsedPercent: m.CpuUsedPercent,
-		MemoryUsed:     m.MemoryUsed,
-	}
 }
 
 func (m Metrics) ToJSON() string {

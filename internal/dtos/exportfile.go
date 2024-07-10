@@ -12,11 +12,6 @@ const (
 	DevicesFilename = "Devices"
 )
 
-var (
-	FuncPointImmutableHeader = []string{"DP ID", "Name", "DataType", "TransferType"}
-	FuncPointIntegerHeader   = []string{"Scale", "ValueType"}
-)
-
 type ExportFile struct {
 	Excel    *excelize.File
 	FileName string

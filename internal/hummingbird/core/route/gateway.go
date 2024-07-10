@@ -45,13 +45,6 @@ func RegisterGateway(engine *gin.Engine, dic *di.Container) {
 	{
 		v1Auth.GET("home-page", ctl.HomePage)
 	}
-
-	{
-		v1Auth.GET("local/config/network", ctl.ConfigNetWorkGet)
-		v1Auth.PUT("local/config/network", ctl.ConfigNetWorkUpdate)
-		v1Auth.GET("local/config/dns", ctl.ConfigDnsGet)
-		v1Auth.PUT("local/config/dns", ctl.ConfigDnsUpdate)
-	}
 	{
 		/******* 运维管理-agentclient *******/
 		v1Auth.GET("/metrics/system", ctl.SystemMetricsHandler)

@@ -24,8 +24,7 @@ type SceneAddRequest struct {
 }
 
 type SceneUpdateRequest struct {
-	Id string `json:"id"`
-	//Condition  constants.WorkerCondition `json:"condition"` //执行条件
+	Id         string      `json:"id"`
 	Conditions []Condition `json:"conditions"`
 	Actions    []Action    `json:"actions"`
 }
@@ -60,7 +59,6 @@ func ReplaceSceneModelFields(scene *models.Scene, req SceneUpdateRequest) {
 type Condition struct {
 	ConditionType string            `json:"condition_type"`
 	Option        map[string]string `json:"option"`
-	//CronExpression string `json:"cron_expression"`
 }
 
 type Action struct {
@@ -81,8 +79,7 @@ type SceneSearchQueryRequest struct {
 
 type SceneLogSearchQueryRequest struct {
 	BaseSearchConditionQuery `schema:",inline"`
-	//Name                     string `schema:"name,omitempty"`
-	StartAt int64  `schema:"start_time"`
-	EndAt   int64  `schema:"end_time"`
-	SceneId string `json:"scene_id"`
+	StartAt                  int64  `schema:"start_time"`
+	EndAt                    int64  `schema:"end_time"`
+	SceneId                  string `json:"scene_id"`
 }

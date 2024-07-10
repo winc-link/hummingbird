@@ -139,18 +139,6 @@ type OpenApiEvents struct {
 	CreatedAt    int64                 `json:"created_at"`
 }
 
-//
-//func (t *OpenApiEvents) TransformModelInPutParams() (inPutParams models.InPutParams) {
-//	for _, datum := range t.OutputParams {
-//		var inputOutput models.InputOutput
-//		inputOutput.Code = datum.Code
-//		inputOutput.Name = datum.Name
-//		inputOutput.TypeSpec = getThingModelTemplateTypeSpec(string(datum.TypeSpec.Type), datum.TypeSpec.Specs, nil)
-//		inPutParams = append(inPutParams, inputOutput)
-//	}
-//	return
-//}
-
 type OpenApiOutPutParams struct {
 	Code     string          `json:"code"`
 	Name     string          `json:"name"`
@@ -232,16 +220,6 @@ func ProductSearchOpenApiFromModel(p models.Product) ProductSearchOpenApiRespons
 
 type ProductSyncRequest struct {
 	CloudInstanceId string `json:"cloud_instance_id"`
-	//Extra struct{
-	//
-	//} `json:"extra"`
-	//Aliyun *struct {
-	//    ResourceGroupId string `json:"resource_group_id"`
-	//} `json:"ali_yun"`
-	//HuaweiYun *struct {
-	//    ProjectId string `json:"project_id"`
-	//    AppId     string `json:"app_id"`
-	//} `json:"huawei_yun"`
 }
 
 type ProductSyncByIdRequest struct {
@@ -269,9 +247,6 @@ type OpenApiAddProductRequest struct {
 	DataFormat  string `json:"data_format"` //数据类型
 	Factory     string `json:"factory"`     //厂家
 	Description string `json:"description"` //描述
-	//Properties  []OpenApiProperties `json:"properties"`
-	//Events      []OpenApiEvents     `json:"events"`
-	//Actions     []OpenApiActions    `json:"services"`
 }
 
 type OpenApiUpdateProductRequest struct {
@@ -283,7 +258,4 @@ type OpenApiUpdateProductRequest struct {
 	DataFormat  *string `json:"data_format"` //数据类型
 	Factory     *string `json:"factory"`     //厂家
 	Description *string `json:"description"` //描述
-	//Properties  []OpenApiProperties `json:"properties"`
-	//Events      []OpenApiEvents     `json:"events"`
-	//Actions     []OpenApiActions    `json:"services"`
 }

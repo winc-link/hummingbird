@@ -17,23 +17,11 @@ package dtos
 type WsCode uint32
 
 const (
-    WsCodeDeviceLibraryUpgrade   WsCode = 10001 // 驱动下载/升级
-    WsCodeDeviceServiceRunStatus WsCode = 10002 // 驱动重启
-    WsCodeDeviceLibraryDelete    WsCode = 10003 // 驱动删除
-    WsCodeDeviceServiceLog       WsCode = 10004 // 驱动日志
-    
-    WsCodeCloudServiceDownload  WsCode = 20001 // 云服务下载
-    WsCodeCloudServiceRunStatus WsCode = 20002 // 云服务重启/停止
-    WsCodeCloudServiceRunDelete WsCode = 20003 // 云服务删除
-    WsCodeCloudServiceRunLog    WsCode = 20004 // 云服务日志
-    
-    WsCodeCheckLang WsCode = 30001 // 切换语言
-    
-    // 云端网络情况
-    WsCodeCloudState WsCode = 10007 // 云端网络情况
-    //OTA
-    WsCodeOTAUpgradeProgress WsCode = 10100 // OTA升级进度
-    WsCodeOTAFirmwareUpgrade WsCode = 10101 // OTA升级
-    // 严重警告
-    WsCodeSeriousAlert WsCode = 10200
+	WsCodeDeviceLibraryUpgrade   WsCode = 10001 // 驱动下载/升级
+	WsCodeDeviceServiceRunStatus WsCode = 10002 // 驱动重启
+	WsCodeDeviceLibraryDelete    WsCode = 10003 // 驱动删除
+	WsCodeDeviceServiceLog       WsCode = 10004 // 驱动日志
+
+	WsCodeCheckLang WsCode = 30001 // 切换语言
+
 )

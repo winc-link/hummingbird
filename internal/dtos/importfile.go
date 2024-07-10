@@ -19,17 +19,3 @@ func NewImportFile(f io.Reader) (*ImportFile, error) {
 		Excel: file,
 	}, nil
 }
-
-type DeviceAddResponse struct {
-	List       []DeviceAddResult `json:"list"`
-	ProcessNum int               `json:"processNum"`
-	SuccessNum int               `json:"successNum"`
-	FailNum    int               `json:"failNum"`
-}
-
-type DeviceAddResult struct {
-	Id      string `json:"id"`
-	Name    string `json:"name"`
-	Status  bool   `json:"status"`
-	Message string `json:"message"`
-}

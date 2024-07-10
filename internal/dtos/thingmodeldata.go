@@ -15,10 +15,8 @@
 package dtos
 
 type ThingModelDataBaseRequest struct {
-	First bool `json:"first"`
-	Last  bool `json:"last"`
-	//Page     int     `json:"page"`
-	//PageSize int     `json:"pageSize"`
+	First bool    `json:"first"`
+	Last  bool    `json:"last"`
 	Range []int64 `json:"range"`
 }
 

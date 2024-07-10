@@ -30,29 +30,11 @@ type ThingModelTemplate struct {
 	Services   []ThingModelTemplateServices   `json:"services"`
 }
 
-//------------------------------------------------------------
-//array
-//{
-//"childDataType":"TEXT",
-//"customFlag":true,
-//"dataType":"ARRAY",
-//"size":128
-//}
 type ThingModelTemplateArray struct {
 	ChildDataType string `json:"childDataType"`
 	Size          int    `json:"size"`
 }
 
-//------------------------------------------------------------
-//{
-//    "dataType":"DOUBLE",
-//    "max":"23",
-//    "min":"16",
-//    "precise":7,
-//    "step":"0.01",
-//    "unit":"°C",
-//    "unitName":"摄氏度"
-//}
 type ThingModelTemplateIntOrFloat struct {
 	Max      string `json:"max"`
 	Min      string `json:"min"`
@@ -61,55 +43,19 @@ type ThingModelTemplateIntOrFloat struct {
 	UnitName string `json:"unitName"`
 }
 
-//------------------------------------------------------------
-//[
-//{
-//"dataType":"BOOL",
-//"name":"未查询",
-//"value":0
-//},
-//{
-//"dataType":"BOOL",
-//"name":"查询",
-//"value":1
-//}
-//]
 type ThingModelTemplateBool struct {
 	Name  string `json:"name"`
 	Value int    `json:"value"`
 }
 
-//------------------------------------------------------------
-//{
-//"dataType":"TEXT",
-//"length":255
-//}
 type ThingModelTemplateText struct {
 	Length int `json:"length"`
 }
 
-//------------------------------------------------------------
-//{
-//"dataType":"Date",
-//"length":255
-//}
 type ThingModelTemplateDate struct {
 	Length string `json:"length"`
 }
 
-//------------------------------------------------------------
-//[
-//{
-//"dataType":"ENUM",
-//"name":"电源",
-//"value":0
-//},
-//{
-//"dataType":"ENUM",
-//"name":"电池",
-//"value":1
-//}
-//]
 type ThingModelTemplateEnum struct {
 	Name  string `json:"name"`
 	Value int    `json:"value"`
@@ -489,88 +435,3 @@ func GetModelPropertyEventActionByThingModelTemplate(thingModelJSON string) (pro
 	}
 	return
 }
-
-//func OpenApiGetModelPropertyEventActionByThingModelTemplate(req OpenApiAddRequest) (properties []models.Properties, events []models.Events, actions []models.Actions) {
-//	for _, property := range req.Properties {
-//		properties = append(properties, models.Properties{
-//			Id:          utils.RandomNum(),
-//			Name:        property.Name,
-//			Code:        property.Code,
-//			AccessMode:  property.AccessMode,
-//			Require:     property.Required,
-//			Description: property.Description,
-//			TypeSpec:    models.TypeSpec(property.TypeSpec),
-//			Tag:         string(constants.TagNameCustom),
-//			Timestamps: models.Timestamps{
-//				Created: time.Now().UnixMilli(),
-//			},
-//		})
-//	}
-//
-//	for _, event := range req.Events {
-//		var outPutParams models.OutPutParams
-//		for _, param := range event.OutputParams {
-//			outPutParams = append(outPutParams, models.InputOutput{
-//				Code: param.Code,
-//				Name: param.Name,
-//				TypeSpec: models.TypeSpec{
-//					Type:  param.TypeSpec.Type,
-//					Specs: param.TypeSpec.Specs,
-//				},
-//			})
-//		}
-//		events = append(events, models.Events{
-//			Id:           utils.RandomNum(),
-//			Name:         event.Name,
-//			EventType:    event.EventType,
-//			Code:         event.Code,
-//			Require:      event.Required,
-//			Description:  event.Description,
-//			OutputParams: outPutParams,
-//			Tag:          string(constants.TagNameCustom),
-//			Timestamps: models.Timestamps{
-//				Created: time.Now().UnixMilli(),
-//			},
-//		})
-//	}
-//
-//	for _, action := range req.Actions {
-//		var inPutParams models.InPutParams
-//		var outPutParams models.OutPutParams
-//		for _, param := range action.InputParams {
-//			inPutParams = append(inPutParams, models.InputOutput{
-//				Code: param.Code,
-//				Name: param.Name,
-//				TypeSpec: models.TypeSpec{
-//					Type:  param.TypeSpec.Type,
-//					Specs: param.TypeSpec.Specs,
-//				},
-//			})
-//		}
-//		for _, param := range action.OutputParams {
-//			outPutParams = append(outPutParams, models.InputOutput{
-//				Code: param.Code,
-//				Name: param.Name,
-//				TypeSpec: models.TypeSpec{
-//					Type:  param.TypeSpec.Type,
-//					Specs: param.TypeSpec.Specs,
-//				},
-//			})
-//		}
-//		actions = append(actions, models.Actions{
-//			Id:           utils.RandomNum(),
-//			Name:         action.Name,
-//			Code:         action.Code,
-//			CallType:     action.CallType,
-//			Require:      action.Required,
-//			Description:  action.Description,
-//			InputParams:  inPutParams,
-//			OutputParams: outPutParams,
-//			Tag:          string(constants.TagNameCustom),
-//			Timestamps: models.Timestamps{
-//				Created: time.Now().UnixMilli(),
-//			},
-//		})
-//	}
-//	return
-//}

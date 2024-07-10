@@ -24,16 +24,6 @@ import (
 type DeviceSyncRequest struct {
 	CloudInstanceId string `json:"cloud_instance_id"`
 	DriveInstanceId string `json:"driver_instance_id"`
-	//Extra struct{
-	//
-	//} `json:"extra"`
-	//Aliyun *struct {
-	//    ResourceGroupId string `json:"resource_group_id"`
-	//} `json:"ali_yun"`
-	//HuaweiYun *struct {
-	//    ProjectId string `json:"project_id"`
-	//    AppId     string `json:"app_id"`
-	//} `json:"huawei_yun"`
 }
 
 type DeviceSyncByIdRequest struct {
@@ -212,11 +202,8 @@ func DeviceAuthInfoResponseFromModel(p models.MqttAuth) DeviceAuthInfoResponse {
 }
 
 type DeviceUpdateRequest struct {
-	Id          string  `json:"id"`
-	Description *string `json:"description"`
-	//Ip              *string `json:"ip"`
-	//Lat             *string `json:"lat"`
-	//Lon             *string `json:"lon"`
+	Id              string  `json:"id"`
+	Description     *string `json:"description"`
 	Name            *string `json:"name"`
 	InstallLocation *string `json:"install_location"`
 	DriveInstanceId *string `json:"drive_instance_id"`
@@ -229,14 +216,6 @@ func ReplaceDeviceModelFields(ds *models.Device, patch DeviceUpdateRequest) {
 	if patch.Name != nil {
 		ds.Name = *patch.Name
 	}
-	//
-	//if patch.Lat != nil {
-	//	ds.Lat = *patch.Lat
-	//}
-	//
-	//if patch.Lon != nil {
-	//	ds.Lon = *patch.Lon
-	//}
 	if patch.DriveInstanceId != nil {
 		ds.DriveInstanceId = *patch.DriveInstanceId
 	}

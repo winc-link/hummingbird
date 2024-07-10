@@ -48,46 +48,34 @@ func (m *DriverConfigManage) SetNetworkName(networkName string) {
 	m.NetWorkName = networkName
 }
 
-// 存储驱动上传配置定义文件目录  /var/tedge/edgex-driver-data/driver-library/
 func (m *DriverConfigManage) GetLibraryDir() string {
 	return utils.GetPwdDir() + "/" + constants.DriverLibraryDir + "/"
 }
 
-// 驱动二进制文件路径 /var/tedge/edgex-driver-data/bin/modbus-1234
 func (m *DriverConfigManage) GetBinPath(serverName string) string {
 	return utils.GetPwdDir() + "/" + constants.DriverBinDir + "/" + serverName
 }
 
-// 驱动启动的配置文件路径 /var/edge/run-config/modbus-1234.toml
 func (m *DriverConfigManage) GetRunConfigPath(serviceName string) string {
 	return constants.DockerHummingbirdRootDir + "/" + constants.DriverRunConfigDir + "/" + serviceName + constants.ConfigSuffix
 }
 
-// docker挂载
 func (m *DriverConfigManage) GetHostRunConfigPath(serviceName string) string {
 	return m.HostRootDir + "/" + constants.DriverRunConfigDir + "/" + serviceName + constants.ConfigSuffix
 }
 
-// 二进制版本路径
-// 驱动启动的配置文件路径 /var/edge/mnt/modbus-1234.toml
 func (m *DriverConfigManage) GetMntDir(serviceName string) string {
 	return constants.DockerHummingbirdRootDir + "/" + constants.DriverMntDir + "/" + serviceName
 }
 
-// docker挂载 的日志：只针对docker版本，二进制版本需要改动日志存储地址 /var/edge/mnt/modbus-1234.toml
 func (m *DriverConfigManage) GetHostMntDir(serviceName string) string {
 	return m.HostRootDir + "/" + constants.DriverMntDir + "/" + serviceName
 }
 
-// 二进制版本 驱动运行日志文件 /var/tedge/mnt/modbus-1234/logs/driver.log
 func (m *DriverConfigManage) GetLogFilePath(serviceName string) string {
 	return utils.GetPwdDir() + "/" + constants.DriverMntDir + "/" + serviceName + "/" + constants.DriverDefaultLogPath
 }
 
-// docker挂载
-//logfilePath = "/var/edge/edge-driver-data/mnt/aliyun-iot/edgex-aliyun-cloud.log"
-
-///var/edge/edge-driver-data/mnt/aliyun-iot
 func (m *DriverConfigManage) GetHostLogFilePath(serviceName string) string {
 	return constants.DockerHummingbirdRootDir + "/" + constants.DriverMntDir + "/" + serviceName + "/" + constants.DriverDefaultLogPath
 }

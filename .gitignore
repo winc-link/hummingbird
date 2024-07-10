@@ -17,3 +17,4 @@ cmd/mqtt-broker/mqtt-broker
 
 kuiper
 db-data/leveldb-core-data
+manifest/docker/db-data/leveldb-core-data/

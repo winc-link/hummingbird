@@ -24,17 +24,14 @@ type DeviceLibrary struct {
 
 func DeviceLibraryFromModel(d models.DeviceLibrary) DeviceLibrary {
 	return DeviceLibrary{
-		Id:          d.Id,
-		Name:        d.Name,
-		Description: d.Description,
-		Protocol:    d.Protocol,
-		Version:     d.Version,
-		//LibFile:         d.LibFile,
-		//ConfigFile:     d.ConfigFile,
+		Id:             d.Id,
+		Name:           d.Name,
+		Description:    d.Description,
+		Protocol:       d.Protocol,
+		Version:        d.Version,
 		DockerConfigId: d.DockerConfigId,
 		DockerRepoName: d.DockerRepoName,
 		DockerImageId:  d.DockerImageId,
-		//SupportVersions: SupperVersionsFromModel(d.SupportVersions),
 	}
 }
 
@@ -70,16 +67,6 @@ func FromDeviceLibraryRpcToModel(p *DeviceLibraryAddRequest) models.DeviceLibrar
 		DockerConfigId: p.DockerConfigId,
 		Language:       p.Language,
 	}
-	//dl.SupportVersions = append(dl.SupportVersions, models.SupportVersion{
-	//	Version:            p.Version,
-	//	IsDefault:          p.IsDefault,
-	//	ConfigJson:         p.ConfigJson,
-	//	ConfigFile:         p.ConfigFile,
-	//	DockerParamsSwitch: p.DockerParamsSwitch,
-	//	DockerParams:       s.DockerParams,
-	//	ExpertMode:         s.ExpertMode,
-	//	ExpertModeContent:  s.ExpertModeContent,
-	//})
 	return dl
 }
 

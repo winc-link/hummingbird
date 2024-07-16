@@ -20,11 +20,12 @@
 
 # 部分页面展示
 
-| ![](manifest/image/1.png)                                               | ![](manifest/image/2.png)                                                   |
-|:------------------------------------------------------------------------|:----------------------------------------------------------------------------|
-| ![](manifest/image/3.png)                                             | ![](manifest/image/4.png)                                                   |
-| ![](manifest/image/5.png)                                               | ![](manifest/image/6.png)                                                   |
-| ![](manifest/image/7.png)                                               | ![](manifest/image/8.png)                                                   |
+| ![](manifest/image/1.png) | ![](manifest/image/2.png)  |
+|:--------------------------|:---------------------------|
+| ![](manifest/image/3.png) | ![](manifest/image/4.png)  |
+| ![](manifest/image/5.png) | ![](manifest/image/6.png)  |
+| ![](manifest/image/9.png) | ![](manifest/image/10.png) |
+| ![](manifest/image/7.png) | ![](manifest/image/8.png)  |
 
 # 官方文档地址
 https://doc.hummingbird.winc-link.com/

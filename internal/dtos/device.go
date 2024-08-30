@@ -171,6 +171,7 @@ type DeviceReportPropertiesValueSearchResponse struct {
 type DeviceAddRequest struct {
 	DeviceId         string                `json:"device_id"`
 	Name             string                `json:"name"`
+	DeviceSn         string                `json:"device_sn"`
 	ProductId        string                `json:"product_id"`
 	Description      string                `json:"description"`
 	Platform         constants.IotPlatform `json:"platform"`

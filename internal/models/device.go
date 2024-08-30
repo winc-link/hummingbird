@@ -32,6 +32,7 @@ type Device struct {
 	CloudInstanceId string                 `gorm:"index;type:string;size:255;comment:云实例ID"`
 	DriveInstanceId string                 `gorm:"index;type:string;size:255;comment:驱动实例ID"`
 	Name            string                 `gorm:"type:string;size:255;comment:名字"`
+	DeviceSn        string                 `gorm:"type:string;size:255;comment:设备唯一编码"`
 	Status          constants.DeviceStatus `gorm:"type:string;size:50;comment:设备状态"`
 	Description     string                 `gorm:"type:text;comment:描述"`
 	ProductId       string                 `gorm:"type:string;size:255;comment:产品ID"`

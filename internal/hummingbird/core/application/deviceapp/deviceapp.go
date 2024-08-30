@@ -152,6 +152,7 @@ func (p *deviceApp) AddDevice(ctx context.Context, req dtos.DeviceAddRequest) (s
 	var insertDevice models.Device
 	insertDevice.Id = deviceId
 	insertDevice.Name = req.Name
+	insertDevice.DeviceSn = req.DeviceSn
 	insertDevice.ProductId = req.ProductId
 	insertDevice.Platform = constants.IotPlatform_LocalIot
 	insertDevice.DriveInstanceId = req.DriverInstanceId

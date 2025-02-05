@@ -12,7 +12,6 @@ require (
 	github.com/gin-contrib/pprof v1.4.0
 	github.com/gin-contrib/static v0.0.1
 	github.com/gin-gonic/gin v1.8.1
-	github.com/go-gormigrate/gormigrate/v2 v2.0.0
 	github.com/gogf/gf/v2 v2.5.2
 	github.com/golang/mock v1.5.0
 	github.com/google/uuid v1.3.0
@@ -20,7 +19,6 @@ require (
 	github.com/gorilla/websocket v1.5.0
 	github.com/hpcloud/tail v1.0.0
 	github.com/influxdata/influxdb1-client v0.0.0-20220302092344-a9ab5670611c
-	github.com/jinzhu/gorm v1.9.16
 	github.com/kirinlabs/HttpRequest v1.1.1
 	github.com/mitchellh/mapstructure v1.4.3
 	github.com/nicksnyder/go-i18n/v2 v2.2.0

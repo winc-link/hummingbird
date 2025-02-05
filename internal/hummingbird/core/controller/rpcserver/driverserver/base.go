@@ -25,6 +25,6 @@ func RegisterRPCService(lc logger.LoggingClient, dic *di.Container, s *grpc.Serv
 	NewDriverDeviceServer(lc, dic).RegisterServer(s)
 	NewCloudInstanceServer(lc, dic).RegisterServer(s)
 	NewGatewayServer(lc, dic).RegisterServer(s)
-	NewDriverStorageServer(lc, dic).RegisterServer(s)
+	//NewDriverStorageServer(lc, dic).RegisterServer(s)
 	NewProductServer(lc, dic).RegisterServer(s)
 }

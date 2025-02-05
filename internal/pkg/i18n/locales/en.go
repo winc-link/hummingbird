@@ -298,6 +298,10 @@ func GetEnMessages() []*i18n.Message {
 			ID:    "20614",
 			Other: `Code identifier already exists`,
 		},
+		{
+			ID:    "20616",
+			Other: `The data type does not support modification. Please delete and recreate`,
+		},
 
 		// docker config
 		{

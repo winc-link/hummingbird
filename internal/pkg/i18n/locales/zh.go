@@ -297,6 +297,10 @@ func GetZhMessages() []*i18n.Message {
 			ID:    "20614",
 			Other: `标识符已重复，请修改标识符`,
 		},
+		{
+			ID:    "20616",
+			Other: `数据类型不支持修改，请删除重新建立`,
+		},
 
 		// docker config
 		{

@@ -40,42 +40,42 @@ func NewClient(config dtos.Configuration, lc logger.LoggingClient) (c *Client, e
 		return
 	}
 	// 自动建表
-	if err = client.InitTable(
-		&models.DeviceLibrary{},
-		&models.DeviceService{},
-		&models.Device{},
-		//&models.NetworkConfig{},
-		&models.DockerConfig{},
-		//&models.GatewayThingModel{},
-		&models.AdvanceConfig{},
-		//&models.OTAVersion{},
-		//&models.CustomMQTT{},
-		&models.CategoryTemplate{},
-		&models.ThingModelTemplate{},
-		&models.DriverClassify{},
-		&models.User{},
-		&models.LanguageSdk{},
-		&models.Product{},
-		&models.Properties{},
-		&models.Actions{},
-		&models.Events{},
-		&models.Unit{},
-		&models.MqttAuth{},
-		&models.SystemMetrics{},
-		&models.AlertRule{},
-		&models.Scene{},
-		&models.SceneLog{},
-		&models.AlertList{},
-		//&models.DeviceAlertRule{},
-		&models.QuickNavigation{},
-		&models.Doc{},
-		&models.MsgGather{},
-		&models.RuleEngine{},
-		&models.DataResource{},
-	); err != nil {
-		errEdgeX = errort.NewCommonEdgeX(errort.DefaultSystemError, "database failed to init", err)
-		return
-	}
+	//if err = client.InitTable(
+	//	&models.DeviceLibrary{},
+	//	&models.DeviceService{},
+	//	&models.Device{},
+	//	//&models.NetworkConfig{},
+	//	&models.DockerConfig{},
+	//	//&models.GatewayThingModel{},
+	//	&models.AdvanceConfig{},
+	//	//&models.OTAVersion{},
+	//	//&models.CustomMQTT{},
+	//	&models.CategoryTemplate{},
+	//	&models.ThingModelTemplate{},
+	//	&models.DriverClassify{},
+	//	&models.User{},
+	//	&models.LanguageSdk{},
+	//	&models.Product{},
+	//	&models.Properties{},
+	//	&models.Actions{},
+	//	&models.Events{},
+	//	&models.Unit{},
+	//	&models.MqttAuth{},
+	//	&models.SystemMetrics{},
+	//	&models.AlertRule{},
+	//	&models.Scene{},
+	//	&models.SceneLog{},
+	//	&models.AlertList{},
+	//	//&models.DeviceAlertRule{},
+	//	&models.QuickNavigation{},
+	//	&models.Doc{},
+	//	&models.MsgGather{},
+	//	&models.RuleEngine{},
+	//	&models.DataResource{},
+	//); err != nil {
+	//	errEdgeX = errort.NewCommonEdgeX(errort.DefaultSystemError, "database failed to init", err)
+	//	return
+	//}
 	c = &Client{
 		client:        client,
 		loggingClient: lc,

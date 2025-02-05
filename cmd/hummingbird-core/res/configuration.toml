@@ -29,13 +29,17 @@ Timeout = 120
 [Databases]
 [Databases.Metadata]
 [Databases.Metadata.Primary]
-Type = 'sqlite'
-DataSource = 'manifest/docker/db-data/core-data/core.db?_timeout=5000'
+#Type = 'sqlite'
+#DataSource = 'manifest/docker/db-data/core-data/core.db?_timeout=5000'
+Type = 'mysql'
+Dsn = 'root:123456@tcp(127.0.0.1:3306)/open-hummingbird?charset=utf8mb4&parseTime=True&loc=Local'
 
 [Databases.Data]
 [Databases.Data.Primary]
-Type = 'leveldb'
-DataSource = 'manifest/docker/db-data/leveldb-core-data/'
+#Type = 'leveldb'
+#DataSource = 'manifest/docker/db-data/leveldb-core-data/'
+Type = 'tdengine'
+Dsn = 'root:taosdata@ws(127.0.0.1:6041)/hummingbird'
 
 [MessageQueue]
 Protocol = 'tcp'

@@ -38,7 +38,7 @@ func NewDatabase(database *config.ConfigurationStruct) Database {
 	}
 }
 
-//Return the dbClient interfaces
+// Return the dbClient interfaces
 func (d Database) newDBClient(
 	lc logger.LoggingClient) (interfaces.DBClient, error) {
 

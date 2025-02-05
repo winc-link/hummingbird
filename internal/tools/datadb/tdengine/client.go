@@ -24,9 +24,12 @@ import (
 	interfaces "github.com/winc-link/hummingbird/internal/hummingbird/core/interface"
 	"github.com/winc-link/hummingbird/internal/models"
 	"github.com/winc-link/hummingbird/internal/pkg/constants"
+	"github.com/winc-link/hummingbird/internal/pkg/errort"
 	"strconv"
 	"strings"
 	"time"
+
+	_ "github.com/taosdata/driver-go/v3/taosWS"
 
 	"github.com/gogf/gf/v2/container/gvar"
 
@@ -54,7 +57,7 @@ var dbName = "hummingbird"
 func NewClient(config dtos.Configuration, lc logger.LoggingClient) (c interfaces.DataDBClient, errEdgeX error) {
 
 	dsn := config.Dsn
-	taos, err := sql.Open("taosRestful", dsn)
+	taos, err := sql.Open("taosWS", dsn)
 
 	if err != nil {
 		return nil, err
@@ -115,83 +118,70 @@ func (c *Client) CreateStable(ctx context.Context, product models.Product) (err 
 	for _, action := range product.Actions {
 		columns = append(columns, c.column("", action.Code, action.Name))
 	}
-
-	tags := make([]string, 0)
-	tags = append(tags, "device VARCHAR(255) COMMENT '设备标识'")
-	tConent := ""
-	if len(tags) > 0 {
-		tConent = fmt.Sprintf("TAGS (%s)", strings.Join(tags, ","))
-	}
-	sql := fmt.Sprintf("CREATE STABLE %s.%s (%s) %s", dbName, constants.DB_PREFIX+product.Id, strings.Join(columns, ","), tConent)
-	c.loggingClient.Info("create s table sql:", sql)
+	sql := fmt.Sprintf("CREATE STABLE IF NOT EXISTS %s.%s (%s) TAGS (device_id NCHAR(255))", dbName, "product_"+product.Id, strings.Join(columns, ","))
 	_, err = c.client.Exec(sql)
 	return err
 }
 
 // CreateTable 创建表
 func (c *Client) CreateTable(ctx context.Context, stable, table string) (err error) {
-	sql := fmt.Sprintf("CREATE TABLE %s%s USING %s (device) TAGS ('%s')", constants.DB_PREFIX, table, stable, table)
+	sql := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s.device_%s USING %s.%s TAGS('%s')", dbName, table, dbName, "product_"+stable, table)
+	fmt.Println(sql)
 	_, err = c.client.Exec(sql)
 	return
 }
 
 func (s *Client) DropStable(ctx context.Context, table string) (err error) {
-	sql := fmt.Sprintf("DROP STABLE IF EXISTS %s.%s", dbName, constants.DB_PREFIX+table)
+	sql := fmt.Sprintf("DROP STABLE IF EXISTS %s.%s", dbName, "product_"+table)
 	_, err = s.client.Exec(sql)
-
 	return
 }
 
 // DropTable 删除子表
 func (s *Client) DropTable(ctx context.Context, table string) (err error) {
-	sql := fmt.Sprintf("DROP TABLE IF EXISTS %s.%s", dbName, constants.DB_PREFIX+table)
+	sql := fmt.Sprintf("DROP TABLE IF EXISTS %s.%s", dbName, "device_"+table)
 	_, err = s.client.Exec(sql)
 	return
 }
 
 func (c *Client) column(specsType constants.SpecsType, code string, name string) string {
 	column := ""
-	comment := ""
-	if name != "" {
-		comment = "COMMENT '" + name + "'"
-	}
 	tdType := ""
-
-	//switch specsType {
-	//case constants.SpecsTypeInt:
-	//	tdType = "INT"
-	//case constants.SpecsTypeFloat:
-	//	tdType = "FLOAT"
-	//case constants.SpecsTypeText:
-	//	tdType = "NCHAR(255)"
-	//case constants.SpecsTypeDate:
-	//	tdType = "TIMESTAMP"
-	//case constants.SpecsTypeBool:
-	//	tdType = "BOOL"
-	//default:
-	//}
-	tdType = "NCHAR(255)"
-	column = fmt.Sprintf("%s %s %s", code, tdType, comment)
+	switch specsType {
+	case constants.SpecsTypeInt:
+		tdType = "INT"
+	case constants.SpecsTypeFloat:
+		tdType = "FLOAT"
+	case constants.SpecsTypeText:
+		tdType = "NCHAR(255)"
+	case constants.SpecsTypeDate:
+		tdType = "TIMESTAMP"
+	case constants.SpecsTypeBool:
+		tdType = "BOOL"
+	default:
+		tdType = "NCHAR(255)"
+	}
+	column = fmt.Sprintf("%s %s", code, tdType)
 	return column
 }
 
 func (c *Client) AddDatabaseField(ctx context.Context, stableName string, specsType constants.SpecsType, code string, name string) (err error) {
-	sql := fmt.Sprintf("ALTER STABLE %s.%s ADD COLUMN %s", dbName, constants.DB_PREFIX+stableName, c.column(specsType, code, name))
+	sql := fmt.Sprintf("ALTER STABLE %s.%s ADD COLUMN %s", dbName, "product_"+stableName, c.column(specsType, code, name))
 	_, err = c.client.Exec(sql)
 	return
 }
 
 func (c *Client) DelDatabaseField(ctx context.Context, stableName, code string) (err error) {
-	sql := fmt.Sprintf("ALTER STABLE %s.%s DROP COLUMN %s", dbName, constants.DB_PREFIX+stableName, code)
+	sql := fmt.Sprintf("ALTER STABLE %s.%s DROP COLUMN %s", dbName, "product_"+stableName, code)
 	_, err = c.client.Exec(sql)
 	return
 }
 
 func (c *Client) ModifyDatabaseField(ctx context.Context, stableName string, specsType constants.SpecsType, code string, name string) (err error) {
-	sql := fmt.Sprintf("ALTER STABLE %s.%s MODIFY COLUMN %s", dbName, constants.DB_PREFIX+stableName, c.column(specsType, code, name))
+	sql := fmt.Sprintf("ALTER STABLE %s.%s MODIFY COLUMN %s", dbName, "product_"+stableName, c.column(specsType, code, name))
 	_, err = c.client.Exec(sql)
-	if err != nil {
-		return
+	if strings.Contains(err.Error(), "column length could be modified") {
+		return errort.NewCommonEdgeX(errort.ThingModeTypeCannotBeModified, "Only varbinary/binary/nchar/geometry column length could be modified, and the length can only be increased, not decreased", nil)
 	}
 	return
 }
@@ -220,16 +210,15 @@ func (c *Client) GetDeviceService(req dtos.ThingModelServiceDataRequest, device 
 		lunix := time.UnixMilli(int64(li))
 
 		if req.Code != "" {
-			err = c.client.QueryRow("select count(*) from ? where ts >= '?' and ts <= '?' and ? is not null", "hummingbird_"+device.Id, funix.Format("2006-01-02 15:04:05.000"), lunix.Format("2006-01-02 15:04:05.000"), strings.ToLower(req.Code)).Scan(&count)
+			err = c.client.QueryRow("select count(*) from ? where ts >= '?' and ts <= '?' and ? is not null", "device_"+device.Id, funix.UTC().Format("2006-01-02 15:04:05.000"), lunix.UTC().Format("2006-01-02 15:04:05.000"), strings.ToLower(req.Code)).Scan(&count)
 			if err != nil {
 				c.loggingClient.Error("query data:", err)
 				return response, count, nil
 			}
 
-			//sql := fmt.Sprintf("select ts,? from ? where ts >= '?' and ts <= '?' and ? is not null order by ts desc limit %d, %d", (req.Page-1)*req.PageSize, req.PageSize)
 			sql := fmt.Sprintf("select ts,? from ? where ts >= '?' and ts <= '?' and ? is not null order by ts desc limit %d, %d", (req.Page-1)*req.PageSize, req.PageSize)
 
-			rows, err := c.client.Query(sql, strings.ToLower(req.Code), "hummingbird_"+device.Id, funix.Format("2006-01-02 15:04:05.000"), lunix.Format("2006-01-02 15:04:05.000"), strings.ToLower(req.Code))
+			rows, err := c.client.Query(sql, strings.ToLower(req.Code), "device_"+device.Id, funix.UTC().Format("2006-01-02 15:04:05.000"), lunix.UTC().Format("2006-01-02 15:04:05.000"), strings.ToLower(req.Code))
 
 			if err != nil {
 				c.loggingClient.Error("query data:", err)
@@ -273,18 +262,16 @@ func (c *Client) GetDeviceService(req dtos.ThingModelServiceDataRequest, device 
 			}
 			codes := strings.Join(code, ",")
 			res := strings.Join(subSQLs, " or ")
-			fmt.Println("res", res)
-			//p2psignalupstream is not null
 			sql := fmt.Sprintf("select count(*) from ? where ts >= '?' and ts <= '?' and (%s)", res)
 
-			err = c.client.QueryRow(sql, "hummingbird_"+device.Id, funix.Format("2006-01-02 15:04:05.000"), lunix.Format("2006-01-02 15:04:05.000")).Scan(&count)
+			err = c.client.QueryRow(sql, "device_"+device.Id, funix.UTC().Format("2006-01-02 15:04:05.000"), lunix.UTC().Format("2006-01-02 15:04:05.000")).Scan(&count)
 			if err != nil {
 				c.loggingClient.Error("query data:", err)
 				return response, count, nil
 			}
 
 			sql2 := fmt.Sprintf("select %s from ? where ts >= '?' and ts <= '?' and (%s) order by ts desc limit %d, %d", codes, res, (req.Page-1)*req.PageSize, req.PageSize)
-			rows, err := c.client.Query(sql2, "hummingbird_"+device.Id, funix.Format("2006-01-02 15:04:05.000"), lunix.Format("2006-01-02 15:04:05.000"))
+			rows, err := c.client.Query(sql2, "device_"+device.Id, funix.UTC().Format("2006-01-02 15:04:05.000"), lunix.UTC().Format("2006-01-02 15:04:05.000"))
 
 			if err != nil {
 				c.loggingClient.Error("query data:", err)
@@ -307,7 +294,6 @@ func (c *Client) GetDeviceService(req dtos.ThingModelServiceDataRequest, device 
 				for i, cs := range columns {
 					rs[cs] = gvar.New(values[i])
 				}
-				//fmt.Println()
 				var reportData dtos.SaveServiceIssueData
 				for _, value := range rs {
 					if value.String() != "" {
@@ -352,7 +338,7 @@ func (c *Client) GetDeviceEvent(req dtos.ThingModelEventDataRequest, device mode
 		lunix := time.UnixMilli(int64(li))
 
 		if req.EventCode != "" {
-			err = c.client.QueryRow("select count(*) from ? where ts >= '?' and ts <= '?' and ? is not null", "hummingbird_"+device.Id, funix.Format("2006-01-02 15:04:05.000"), lunix.Format("2006-01-02 15:04:05.000"), strings.ToLower(req.EventCode)).Scan(&count)
+			err = c.client.QueryRow("select count(*) from ? where ts >= '?' and ts <= '?' and ? is not null", "device_"+device.Id, funix.UTC().Format("2006-01-02 15:04:05.000"), lunix.UTC().Format("2006-01-02 15:04:05.000"), strings.ToLower(req.EventCode)).Scan(&count)
 			if err != nil {
 				c.loggingClient.Error("query data:", err)
 				return response, count, nil
@@ -361,7 +347,7 @@ func (c *Client) GetDeviceEvent(req dtos.ThingModelEventDataRequest, device mode
 			//sql := fmt.Sprintf("select ts,? from ? where ts >= '?' and ts <= '?' and ? is not null order by ts desc limit %d, %d", (req.Page-1)*req.PageSize, req.PageSize)
 			sql := fmt.Sprintf("select ts,? from ? where ts >= '?' and ts <= '?' and ? is not null order by ts desc limit %d, %d", (req.Page-1)*req.PageSize, req.PageSize)
 
-			rows, err := c.client.Query(sql, strings.ToLower(req.EventCode), "hummingbird_"+device.Id, funix.Format("2006-01-02 15:04:05.000"), lunix.Format("2006-01-02 15:04:05.000"), strings.ToLower(req.EventCode))
+			rows, err := c.client.Query(sql, strings.ToLower(req.EventCode), "device_"+device.Id, funix.UTC().Format("2006-01-02 15:04:05.000"), lunix.UTC().Format("2006-01-02 15:04:05.000"), strings.ToLower(req.EventCode))
 
 			if err != nil {
 				c.loggingClient.Error("query data:", err)
@@ -405,17 +391,16 @@ func (c *Client) GetDeviceEvent(req dtos.ThingModelEventDataRequest, device mode
 			}
 			codes := strings.Join(code, ",")
 			res := strings.Join(subSQLs, " or ")
-			//p2psignalupstream is not null
 			sql := fmt.Sprintf("select count(*) from ? where ts >= '?' and ts <= '?' and (%s)", res)
 
-			err = c.client.QueryRow(sql, "hummingbird_"+device.Id, funix.Format("2006-01-02 15:04:05.000"), lunix.Format("2006-01-02 15:04:05.000")).Scan(&count)
+			err = c.client.QueryRow(sql, "device_"+device.Id, funix.UTC().Format("2006-01-02 15:04:05.000"), lunix.UTC().Format("2006-01-02 15:04:05.000")).Scan(&count)
 			if err != nil {
 				c.loggingClient.Error("query data:", err)
 				return response, count, nil
 			}
 
 			sql2 := fmt.Sprintf("select %s from ? where ts >= '?' and ts <= '?' and (%s) order by ts desc limit %d, %d", codes, res, (req.Page-1)*req.PageSize, req.PageSize)
-			rows, err := c.client.Query(sql2, "hummingbird_"+device.Id, funix.Format("2006-01-02 15:04:05.000"), lunix.Format("2006-01-02 15:04:05.000"))
+			rows, err := c.client.Query(sql2, "device_"+device.Id, funix.UTC().Format("2006-01-02 15:04:05.000"), lunix.UTC().Format("2006-01-02 15:04:05.000"))
 
 			if err != nil {
 				c.loggingClient.Error("query data:", err)
@@ -490,15 +475,19 @@ func (c *Client) GetDeviceProperty(req dtos.ThingModelPropertyDataRequest, devic
 		}
 		lunix := time.UnixMilli(int64(li))
 
-		err = c.client.QueryRow("select count(*) from ? where ts >= '?' and ts <= '?' and ? is not null", "hummingbird_"+device.Id, funix.Format("2006-01-02 15:04:05.000"), lunix.Format("2006-01-02 15:04:05.000"), strings.ToLower(req.Code)).Scan(&count)
+		err = c.client.QueryRow("select count(*) from ? where ts >= '?' and ts <= '?' and ? is not null", "device_"+device.Id, funix.UTC().Format("2006-01-02 15:04:05.000"), lunix.UTC().Format("2006-01-02 15:04:05.000"), strings.ToLower(req.Code)).Scan(&count)
 		if err != nil {
 			c.loggingClient.Error("query data:", err)
 			return []dtos.ReportData{}, count, nil
 		}
+		var sql string
+		if req.IsAll {
+			sql = fmt.Sprintf("select ts,? from ? where ts >= '?' and ts <= '?' and ? is not null order by ts desc")
+		} else {
+			sql = fmt.Sprintf("select ts,? from ? where ts >= '?' and ts <= '?' and ? is not null order by ts desc limit %d, %d", (req.Page-1)*req.PageSize, req.PageSize)
+		}
 
-		sql := fmt.Sprintf("select ts,? from ? where ts >= '?' and ts <= '?' and ? is not null order by ts desc limit %d, %d", (req.Page-1)*req.PageSize, req.PageSize)
-
-		rows, err := c.client.Query(sql, strings.ToLower(req.Code), "hummingbird_"+device.Id, funix.Format("2006-01-02 15:04:05.000"), lunix.Format("2006-01-02 15:04:05.000"), strings.ToLower(req.Code))
+		rows, err := c.client.Query(sql, strings.ToLower(req.Code), "device_"+device.Id, funix.UTC().Format("2006-01-02 15:04:05.000"), lunix.UTC().Format("2006-01-02 15:04:05.000"), strings.ToLower(req.Code))
 
 		if err != nil {
 			c.loggingClient.Error("query data:", err)
@@ -529,15 +518,9 @@ func (c *Client) GetDeviceProperty(req dtos.ThingModelPropertyDataRequest, devic
 			reportData.Value = rs[strings.ToLower(req.Code)].String()
 			response = append(response, reportData)
 		}
-	} else if req.First {
-
 	} else if req.Last {
-		//sql := "select ts,? from ? where ? is not null order by ts desc limit 1"
-		currentTime := time.Now()
-		oldTime := currentTime.AddDate(0, 0, -7)
-		sql := fmt.Sprintf("select ts,? from ? where ? is not null and ts >= %s order by ts desc limit 1", oldTime.Format("2006-01-02 15:04:05.000"))
-		rows, err := c.client.Query(sql, strings.ToLower(req.Code), "hummingbird_"+device.Id, strings.ToLower(req.Code))
-
+		sql := "select ts,last(?) as ? from hummingbird.?"
+		rows, err := c.client.Query(sql, strings.ToLower(req.Code), strings.ToLower(req.Code), "device_"+device.Id)
 		if err != nil {
 			return []dtos.ReportData{}, count, nil
 		}
@@ -559,7 +542,6 @@ func (c *Client) GetDeviceProperty(req dtos.ThingModelPropertyDataRequest, devic
 			for i, cs := range columns {
 				rs[cs] = gvar.New(values[i])
 			}
-			rows.Close()
 		}
 		var reportData dtos.ReportData
 		reportData.Time = rs["ts"].Time().UnixMilli()
@@ -568,7 +550,6 @@ func (c *Client) GetDeviceProperty(req dtos.ThingModelPropertyDataRequest, devic
 		}
 		reportData.Value = rs[strings.ToLower(req.Code)].String()
 		response = append(response, reportData)
-		//return []dtos.ReportData{V}, nil
 	}
 
 	return response, count, nil

@@ -31,6 +31,9 @@ Timeout = 120
 [Databases.Metadata.Primary]
 Type = 'sqlite'
 DataSource = 'hummingbird/db-data/core-data/core.db?_timeout=5000'
+#Type = 'mysql'
+#Dsn = 'root:123456@tcp(127.0.0.1:3306)/open-hummingbird?charset=utf8mb4&parseTime=True&loc=Local'
+
 
 [Databases.Data]
 [Databases.Data.Primary]

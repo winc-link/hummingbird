@@ -145,7 +145,7 @@ func (p *deviceApp) AddDevice(ctx context.Context, req dtos.DeviceAddRequest) (s
 		return "", err
 	}
 
-	err = resourceContainer.DataDBClientFrom(p.dic.Get).CreateTable(ctx, constants.DB_PREFIX+productInfo.Id, deviceId)
+	err = resourceContainer.DataDBClientFrom(p.dic.Get).CreateTable(ctx, productInfo.Id, deviceId)
 	if err != nil {
 		return "", err
 	}
@@ -529,7 +529,7 @@ func (p *deviceApp) DevicesImport(ctx context.Context, file *dtos.ImportFile, pr
 	}
 
 	for _, device := range devices {
-		err = resourceContainer.DataDBClientFrom(p.dic.Get).CreateTable(ctx, constants.DB_PREFIX+productInfo.Id, device.Id)
+		err = resourceContainer.DataDBClientFrom(p.dic.Get).CreateTable(ctx, productInfo.Id, device.Id)
 		if err != nil {
 			return 0, err
 		}

@@ -63,13 +63,14 @@ const (
 	DeviceAssociationSceneRule                 = 20416
 
 	// 产品
-	ProductMustDeleteDevice     uint32 = 20602
-	ProductNotExist             uint32 = 20604
-	ProductPropertyCodeNotExist uint32 = 20608
-	ProductAssociationAlertRule        = 20611
-	ProductUnRelease                   = 20612
-	ProductRelease                     = 20613
-	ThingModelCodeExist                = 20614
+	ProductMustDeleteDevice       uint32 = 20602
+	ProductNotExist               uint32 = 20604
+	ProductPropertyCodeNotExist   uint32 = 20608
+	ProductAssociationAlertRule          = 20611
+	ProductUnRelease                     = 20612
+	ProductRelease                       = 20613
+	ThingModelCodeExist                  = 20614
+	ThingModeTypeCannotBeModified        = 20616
 
 	// 镜像仓库
 	DockerConfigMustDeleteDeviceLibrary uint32 = 20701

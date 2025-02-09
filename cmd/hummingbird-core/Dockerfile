@@ -27,7 +27,7 @@ COPY . .
 RUN make cmd/hummingbird-core/hummingbird-core
 
 #Next image - Copy built Go binary into new workspace
-FROM alpine:3.16
+FROM registry.cn-shanghai.aliyuncs.com/winc-edgex/alpine:3.12
 
 ENV APP_PORT=58081
 ENV WEB_PORT=3000
@@ -38,7 +38,6 @@ WORKDIR /var/bin/
 
 
 COPY --from=builder /edge/cmd/hummingbird-core/hummingbird-core /bin/
-COPY --from=builder /edge/cmd/hummingbird-core/res/configuration.toml.dist /etc/hummingbird-core/configuration.toml
 COPY --from=builder /edge/cmd/hummingbird-ui/build /var/bin/cmd/hummingbird-ui/build
 
 CMD ["/bin/sh", "-c", "/bin/hummingbird-core --confdir=/etc/hummingbird-core/configuration.toml"]

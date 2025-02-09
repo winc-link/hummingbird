@@ -18,5 +18,5 @@ start:
 
 .PHONY: build
 build:
-	docker buildx build --platform linux/amd64 -t "" -f cmd/hummingbird-core/Dockerfile --push .
+	docker buildx build --platform linux/amd64 -t "registry.cn-shanghai.aliyuncs.com/winc-link/hummingbird-core:v1.0" -f cmd/hummingbird-core/Dockerfile --push .
 

@@ -44,6 +44,6 @@ services:
     volumes:
       - ./:/var/bin/hummingbird
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./config/configuration.toml:/etc/hummingbird/configuration.toml
+      - ./config/configuration.toml:/etc/hummingbird-core/configuration.toml
     networks:
       - hummingbird

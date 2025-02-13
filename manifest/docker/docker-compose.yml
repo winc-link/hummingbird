@@ -38,6 +38,7 @@ services:
     ports:
       - "3000:3000"
       - "58081:58081"
+      - "57081:57081"
     depends_on:
       - ekuiper
       - mqtt-broker

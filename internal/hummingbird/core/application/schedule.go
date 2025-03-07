@@ -6,20 +6,10 @@ package application
 import (
 	"context"
 	resourceContainer "github.com/winc-link/hummingbird/internal/hummingbird/core/container"
+	"github.com/winc-link/hummingbird/internal/pkg/crontab"
 	"github.com/winc-link/hummingbird/internal/pkg/di"
 	"github.com/winc-link/hummingbird/internal/pkg/logger"
 	"time"
-
-	//"gitlab.com/tedge/edgex/internal/dtos"
-	//"gitlab.com/tedge/edgex/internal/pkg/constants"
-	//"gitlab.com/tedge/edgex/internal/pkg/container"
-	//pkgContainer "github.com/winc-link/hummingbird/internal/pkg/container"
-	"github.com/winc-link/hummingbird/internal/pkg/crontab"
-	//"gitlab.com/tedge/edgex/internal/pkg/di"
-	//"gitlab.com/tedge/edgex/internal/pkg/errort"
-	//"gitlab.com/tedge/edgex/internal/pkg/logger"
-	//resourceContainer "gitlab.com/tedge/edgex/internal/tedge/resource/container"
-	//"gitlab.com/tedge/edgex/internal/tools/atopclient"
 )
 
 func InitSchedule(dic *di.Container, lc logger.LoggingClient) {

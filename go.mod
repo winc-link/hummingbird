@@ -21,6 +21,7 @@ require (
 	github.com/influxdata/influxdb1-client v0.0.0-20220302092344-a9ab5670611c
 	github.com/kirinlabs/HttpRequest v1.1.1
 	github.com/mitchellh/mapstructure v1.4.3
+	github.com/nakabonne/tstorage v0.3.6
 	github.com/nicksnyder/go-i18n/v2 v2.2.0
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/pelletier/go-toml v1.9.5

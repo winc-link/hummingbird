@@ -17,25 +17,46 @@ package utils
 import "fmt"
 
 func InStringSlice(key string, keys []string) bool {
-    ok := false
-    for _, item := range keys {
-        if key == item {
-            return true
-        }
-    }
-    return ok
+	ok := false
+	for _, item := range keys {
+		if key == item {
+			return true
+		}
+	}
+	return ok
 }
 
 func SliceStringUnique(strings []string) []string {
-    temp := map[string]struct{}{}
-    result := make([]string, 0, len(strings))
-    for _, item := range strings {
-        key := fmt.Sprint(item)
-        if _, ok := temp[key]; !ok {
-            temp[key] = struct{}{}
-            result = append(result, item)
-        }
-    }
-    return result
+	temp := map[string]struct{}{}
+	result := make([]string, 0, len(strings))
+	for _, item := range strings {
+		key := fmt.Sprint(item)
+		if _, ok := temp[key]; !ok {
+			temp[key] = struct{}{}
+			result = append(result, item)
+		}
+	}
+	return result
 }
 
+func ConvertToFloat64(i interface{}) float64 {
+	switch v := i.(type) {
+	case float64:
+		return v
+	case float32:
+		return float64(v)
+	case int:
+		return float64(v)
+	case int64:
+		return float64(v)
+	case int32:
+		return float64(v)
+	case string:
+		var f float64
+		_, err := fmt.Sscanf(v, "%f", &f)
+		if err == nil {
+			return f
+		}
+	}
+	return 0
+}

@@ -556,7 +556,7 @@ func (p *deviceApp) DevicesReportMsgGather(ctx context.Context) error {
 	persistApp := resourceContainer.PersistItfFrom(p.dic.Get)
 	count, err = persistApp.SearchDeviceMsgCount(startTime, endTime)
 	if err != nil {
-
+		return err
 	}
 	var msgGather models.MsgGather
 	msgGather.Count = count

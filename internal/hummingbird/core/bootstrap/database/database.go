@@ -15,6 +15,7 @@ import (
 	"github.com/winc-link/hummingbird/internal/hummingbird/core/infrastructure/sqlite"
 	"github.com/winc-link/hummingbird/internal/pkg/constants"
 	"github.com/winc-link/hummingbird/internal/tools/datadb/tdengine"
+	"github.com/winc-link/hummingbird/internal/tools/datadb/tstorage"
 
 	"github.com/winc-link/hummingbird/internal/pkg/di"
 	"github.com/winc-link/hummingbird/internal/pkg/logger"
@@ -66,6 +67,10 @@ func (d Database) newDataDBClient(
 	switch dataDbInfo.Type {
 	case string(constants.LevelDB):
 		return leveldb.NewClient(dtos.Configuration{
+			DataSource: dataDbInfo.DataSource,
+		}, lc)
+	case string(constants.Tstorage):
+		return tstorage.NewClient(dtos.Configuration{
 			DataSource: dataDbInfo.DataSource,
 		}, lc)
 	case string(constants.TDengine):

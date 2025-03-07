@@ -36,10 +36,12 @@ Dsn = 'root:123456@tcp(127.0.0.1:3306)/open-hummingbird?charset=utf8mb4&parseTim
 
 [Databases.Data]
 [Databases.Data.Primary]
+Type = 'tstorage'
+DataSource = 'manifest/docker/db-data/tstorage-data/'
+#Type = 'tdengine'
+#Dsn = 'root:taosdata@ws(127.0.0.1:6041)/hummingbird'
 #Type = 'leveldb'
 #DataSource = 'manifest/docker/db-data/leveldb-core-data/'
-Type = 'tdengine'
-Dsn = 'root:taosdata@ws(127.0.0.1:6041)/hummingbird'
 
 [MessageQueue]
 Protocol = 'tcp'

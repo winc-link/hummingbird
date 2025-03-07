@@ -58,6 +58,8 @@ func (pst *persistApp) SaveDeviceThingModelData(req dtos.ThingModelMessage) erro
 		return pst.saveDeviceThingModelToLevelDB(req)
 	case constants.TDengine:
 		return pst.saveDeviceThingModelToTdengine(req)
+	case constants.Tstorage:
+		return pst.saveDeviceThingModelToTstorage(req)
 	default:
 		return nil
 	}
@@ -406,6 +408,174 @@ func (pst *persistApp) saveDeviceThingModelToTdengine(req dtos.ThingModelMessage
 	return nil
 }
 
+func (pst *persistApp) saveDeviceThingModelToTstorage(req dtos.ThingModelMessage) error {
+	switch req.GetOpType() {
+	case thingmodel.OperationType_PROPERTY_REPORT:
+		propertyMsg, err := req.TransformMessageDataByProperty()
+		if err != nil {
+			return err
+		}
+		data := make(map[string]interface{})
+		for s, reportData := range propertyMsg.Data {
+			data[s] = reportData.Value
+		}
+
+		err = pst.dataDbClient.Insert(context.Background(), constants.DB_PREFIX+req.Cid, data)
+		if err != nil {
+			return err
+		}
+
+	case thingmodel.OperationType_EVENT_REPORT:
+		eventMsg, err := req.TransformMessageDataByEvent()
+		if err != nil {
+			return err
+		}
+		data := make(map[string]interface{})
+		data[eventMsg.Data.EventCode] = eventMsg.Data
+		err = pst.dataDbClient.Insert(context.Background(), constants.DB_PREFIX+req.Cid, data)
+		if err != nil {
+			return err
+		}
+
+	case thingmodel.OperationType_SERVICE_EXECUTE:
+		serviceMsg, err := req.TransformMessageDataByService()
+		if err != nil {
+			return err
+		}
+		v, _ := serviceMsg.Marshal()
+		data := make(map[string]interface{})
+		data[serviceMsg.Code] = string(v)
+		err = pst.dataDbClient.Insert(context.Background(), constants.DB_PREFIX+req.Cid, data)
+		if err != nil {
+			return err
+		}
+
+	case thingmodel.OperationType_PROPERTY_GET_RESPONSE:
+		msg, err := req.TransformMessageDataByGetProperty()
+		if err != nil {
+			return err
+		}
+		messageStore := resourceContainer.MessageStoreItfFrom(pst.dic.Get)
+		ack, ok := messageStore.LoadMsgChan(msg.MsgId)
+		if !ok {
+			//超时了。
+			return nil
+		}
+		if v, ok := ack.(*messagestore.MsgAckChan); ok {
+			v.TrySendDataAndCloseChan(msg.Data)
+			messageStore.DeleteMsgId(msg.MsgId)
+		}
+	case thingmodel.OperationType_PROPERTY_SET_RESPONSE:
+		msg, err := req.TransformMessageDataBySetProperty()
+		if err != nil {
+			return err
+		}
+		messageStore := resourceContainer.MessageStoreItfFrom(pst.dic.Get)
+		ack, ok := messageStore.LoadMsgChan(msg.MsgId)
+		if !ok {
+			//超时了。
+			return nil
+		}
+		if v, ok := ack.(*messagestore.MsgAckChan); ok {
+			v.TrySendDataAndCloseChan(msg.Data)
+			messageStore.DeleteMsgId(msg.MsgId)
+		}
+	case thingmodel.OperationType_DATA_BATCH_REPORT:
+
+		msg, err := req.TransformMessageDataByBatchReport()
+		if err != nil {
+			return err
+		}
+		data := make(map[string]interface{})
+
+		for code, property := range msg.Data.Properties {
+			data[code] = property.Value
+		}
+		for code, event := range msg.Data.Events {
+			var eventData dtos.EventData
+			eventData.OutputParams = event.OutputParams
+			eventData.EventCode = code
+			eventData.EventTime = msg.Time
+			data[code] = eventData
+
+		}
+		//批量写。
+		err = pst.dataDbClient.Insert(context.Background(), constants.DB_PREFIX+req.Cid, data)
+
+		if err != nil {
+			return err
+		}
+		return nil
+	case thingmodel.OperationType_SERVICE_EXECUTE_RESPONSE:
+		serviceMsg, err := req.TransformMessageDataByServiceExec()
+		if err != nil {
+			return err
+		}
+
+		device, err := pst.dbClient.DeviceById(req.Cid)
+		if err != nil {
+			return err
+		}
+
+		_, err = pst.dbClient.ProductById(device.ProductId)
+		if err != nil {
+			return err
+		}
+
+		//var find bool
+		//var callType constants.CallType
+		//
+		//for _, action := range product.Actions {
+		//	if action.Code == serviceMsg.Code {
+		//		find = true
+		//		callType = action.CallType
+		//		break
+		//	}
+		//}
+		//
+		//if !find {
+		//	return errors.New("")
+		//}
+
+		messageStore := resourceContainer.MessageStoreItfFrom(pst.dic.Get)
+		ack, ok := messageStore.LoadMsgChan(serviceMsg.MsgId)
+		if !ok {
+			//可能是超时了。
+			return nil
+		}
+
+		if v, ok := ack.(*messagestore.MsgAckChan); ok {
+			v.TrySendDataAndCloseChan(serviceMsg.OutputParams)
+			messageStore.DeleteMsgId(serviceMsg.MsgId)
+		}
+
+		//if callType == constants.CallTypeSync {
+		//	messageStore := resourceContainer.MessageStoreItfFrom(pst.dic.Get)
+		//	ack, ok := messageStore.LoadMsgChan(serviceMsg.MsgId)
+		//	if !ok {
+		//		//可能是超时了。
+		//		return nil
+		//	}
+		//
+		//	if v, ok := ack.(*messagestore.MsgAckChan); ok {
+		//		v.TrySendDataAndCloseChan(serviceMsg.OutputParams)
+		//		messageStore.DeleteMsgId(serviceMsg.MsgId)
+		//	}
+		//
+		//} else if callType == constants.CallTypeAsync {
+		//	v, _ := serviceMsg.Marshal()
+		//	data := make(map[string]interface{})
+		//	data[serviceMsg.Code] = string(v)
+		//	err = pst.dataDbClient.Insert(context.Background(), constants.DB_PREFIX+req.Cid, data)
+		//	if err != nil {
+		//		return err
+		//	}
+		//}
+
+	}
+	return nil
+}
+
 func generatePropertyLeveldbKey(cid, code string, reportTime int64) string {
 	return cid + "-" + constants.Property + "-" + code + "-" + strconv.Itoa(int(reportTime))
 }
@@ -517,6 +687,96 @@ func (pst *persistApp) searchDeviceThingModelHistoryPropertyDataFromTDengine(req
 	return response, count, nil
 }
 
+func (pst *persistApp) searchDeviceThingModelHistoryPropertyDataFromTstorage(req dtos.ThingModelPropertyDataRequest) (interface{}, int, error) {
+	var count int
+	deviceInfo, err := pst.dbClient.DeviceById(req.DeviceId)
+	if err != nil {
+		return nil, count, err
+	}
+	var productInfo models.Product
+	productInfo, err = pst.dbClient.ProductById(deviceInfo.ProductId)
+	if err != nil {
+		return nil, count, err
+	}
+	var response []dtos.ReportData
+
+	for _, property := range productInfo.Properties {
+		if property.Code == req.Code {
+			req.Code = property.Code
+			response, count, err = pst.dataDbClient.GetDeviceProperty(req, deviceInfo)
+			if err != nil {
+				pst.lc.Errorf("GetDeviceProperty error %+v", err)
+			}
+			var typeSpecIntOrFloat models.TypeSpecIntOrFloat
+			if property.TypeSpec.Type == constants.SpecsTypeInt || property.TypeSpec.Type == constants.SpecsTypeFloat {
+				_ = json.Unmarshal([]byte(property.TypeSpec.Specs), &typeSpecIntOrFloat)
+			}
+
+			if typeSpecIntOrFloat.Unit == "" {
+				typeSpecIntOrFloat.Unit = "-"
+			}
+			break
+		}
+	}
+	return response, count, nil
+}
+
+func (pst *persistApp) searchDeviceThingModelPropertyDataFromTstorage(req dtos.ThingModelPropertyDataRequest) (interface{}, error) {
+	deviceInfo, err := pst.dbClient.DeviceById(req.DeviceId)
+	if err != nil {
+		return nil, err
+	}
+	var productInfo models.Product
+	response := make([]dtos.ThingModelDataResponse, 0)
+	productInfo, err = pst.dbClient.ProductById(deviceInfo.ProductId)
+	if err != nil {
+		return nil, err
+	}
+	if req.Code == "" {
+		for _, property := range productInfo.Properties {
+			req.Code = property.Code
+			ksv, _, err := pst.dataDbClient.GetDeviceProperty(req, deviceInfo)
+			if err != nil {
+				pst.lc.Errorf("GetDeviceProperty error %+v", err)
+				continue
+			}
+			var reportData dtos.ReportData
+			if len(ksv) > 0 {
+				reportData = ksv[0]
+			}
+			var unit string
+			if property.TypeSpec.Type == constants.SpecsTypeInt || property.TypeSpec.Type == constants.SpecsTypeFloat {
+				var typeSpecIntOrFloat models.TypeSpecIntOrFloat
+				_ = json.Unmarshal([]byte(property.TypeSpec.Specs), &typeSpecIntOrFloat)
+				unit = typeSpecIntOrFloat.Unit
+			} else if property.TypeSpec.Type == constants.SpecsTypeEnum {
+				//enum 的单位需要特殊处理一下
+				enumTypeSpec := make(map[string]string)
+				_ = json.Unmarshal([]byte(property.TypeSpec.Specs), &enumTypeSpec)
+				for key, value := range enumTypeSpec {
+					s := utils.InterfaceToString(reportData.Value)
+					if key == s {
+						unit = value
+					}
+				}
+			}
+
+			if unit == "" {
+				unit = "-"
+			}
+			response = append(response, dtos.ThingModelDataResponse{
+				ReportData: reportData,
+				Code:       property.Code,
+				DataType:   string(property.TypeSpec.Type),
+				Name:       property.Name,
+				Unit:       unit,
+				AccessMode: property.AccessMode,
+			})
+		}
+	}
+	return response, nil
+}
+
 func (pst *persistApp) searchDeviceThingModelPropertyDataFromTDengine(req dtos.ThingModelPropertyDataRequest) (interface{}, error) {
 	deviceInfo, err := pst.dbClient.DeviceById(req.DeviceId)
 	if err != nil {
@@ -549,8 +809,6 @@ func (pst *persistApp) searchDeviceThingModelPropertyDataFromTDengine(req dtos.T
 				//enum 的单位需要特殊处理一下
 				enumTypeSpec := make(map[string]string)
 				_ = json.Unmarshal([]byte(property.TypeSpec.Specs), &enumTypeSpec)
-				//pst.lc.Info("reportDataType enumTypeSpec", enumTypeSpec)
-
 				for key, value := range enumTypeSpec {
 					s := utils.InterfaceToString(reportData.Value)
 					if key == s {
@@ -580,9 +838,10 @@ func (pst *persistApp) SearchDeviceThingModelPropertyData(req dtos.ThingModelPro
 	switch pst.dataDbClient.GetDataDBType() {
 	case constants.LevelDB:
 		return pst.searchDeviceThingModelPropertyDataFromLevelDB(req)
-
 	case constants.TDengine:
 		return pst.searchDeviceThingModelPropertyDataFromTDengine(req)
+	case constants.Tstorage:
+		return pst.searchDeviceThingModelPropertyDataFromTstorage(req)
 
 	default:
 		return make([]interface{}, 0), nil
@@ -619,6 +878,8 @@ func (pst *persistApp) SearchDeviceThingModelHistoryPropertyData(req dtos.ThingM
 		return pst.searchDeviceThingModelHistoryPropertyDataFromLevelDB(req)
 	case constants.TDengine:
 		return pst.searchDeviceThingModelHistoryPropertyDataFromTDengine(req)
+	case constants.Tstorage:
+		return pst.searchDeviceThingModelHistoryPropertyDataFromTstorage(req)
 	}
 	response := make([]interface{}, 0)
 	return response, 0, nil

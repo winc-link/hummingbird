@@ -318,32 +318,45 @@ func (c *Client) GetDeviceProperty(req dtos.ThingModelPropertyDataRequest, devic
 			firstTime = strconv.Itoa(int(req.Range[1]))
 			lastTime = strconv.Itoa(int(req.Range[0]))
 		}
-
 		iter := c.client.NewIterator(&util.Range{Start: []byte(baseKey + firstTime), Limit: []byte(baseKey + lastTime)}, &opt.ReadOptions{
 			DontFillCache: true,
 		})
-		var start int
-		var end int
+		if req.IsAll {
+			if iter.Last() {
+				for iter.Prev() {
+					var dbvalue dtos.ReportData
+					_ = json.Unmarshal(iter.Value(), &dbvalue)
+					response = append(response, dbvalue)
 
-		start = (req.Page-1)*req.PageSize + 1
-		end = (req.Page-1)*req.PageSize + req.PageSize
+				}
+			}
+		} else {
 
-		if iter.Last() {
-			count++
-			var dbvalue dtos.ReportData
-			_ = json.Unmarshal(iter.Value(), &dbvalue)
-			response = append(response, dbvalue)
-			for iter.Prev() {
+			var start int
+			var end int
+
+			start = (req.Page-1)*req.PageSize + 1
+			end = (req.Page-1)*req.PageSize + req.PageSize
+			if iter.Last() {
 				count++
-				if count >= start && count <= end {
+				if req.Page == 1 {
 					var dbvalue dtos.ReportData
 					_ = json.Unmarshal(iter.Value(), &dbvalue)
 					response = append(response, dbvalue)
 				}
+				for iter.Prev() {
+					count++
+					if count >= start && count <= end {
+						var dbvalue dtos.ReportData
+						_ = json.Unmarshal(iter.Value(), &dbvalue)
+						response = append(response, dbvalue)
+					}
 
+				}
 			}
 		}
 		iter.Release()
+
 	} else if req.First {
 		iter := c.client.NewIterator(util.BytesPrefix([]byte(baseKey)), &opt.ReadOptions{
 			DontFillCache: true,
@@ -363,13 +376,27 @@ func (c *Client) GetDeviceProperty(req dtos.ThingModelPropertyDataRequest, devic
 			//break
 		}
 		iter.Release()
-	} else {
-
 	}
 	return response, count, nil
 }
 
 func (c *Client) GetDeviceMsgCountByGiveTime(deviceId string, startTime, endTime int64) (int, error) {
-	//TODO implement me
-	panic("implement me")
+	baseKey := deviceId + "-" + constants.Property + "-"
+	firstTime := strconv.Itoa(int(startTime))
+	lastTime := strconv.Itoa(int(endTime))
+
+	var count int
+
+	iter := c.client.NewIterator(&util.Range{Start: []byte(baseKey + firstTime), Limit: []byte(baseKey + lastTime)}, &opt.ReadOptions{
+		DontFillCache: true,
+	})
+
+	count++
+	if iter.Prev() {
+		count++
+	}
+
+	iter.Release()
+
+	return count, nil
 }

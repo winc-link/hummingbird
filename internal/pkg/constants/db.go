@@ -30,4 +30,5 @@ type DataType string
 const (
 	LevelDB  DataType = "leveldb"
 	TDengine DataType = "tdengine"
+	Tstorage DataType = "tstorage"
 )

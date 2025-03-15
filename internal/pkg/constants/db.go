@@ -15,7 +15,7 @@
 package constants
 
 const (
-	DB_PREFIX = "hummingbird_"
+	DB_PREFIX = "device_"
 )
 
 type MetadataType string

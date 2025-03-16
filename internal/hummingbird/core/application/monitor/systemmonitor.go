@@ -30,7 +30,9 @@ import (
 	"github.com/winc-link/hummingbird/internal/pkg/di"
 	"github.com/winc-link/hummingbird/internal/pkg/logger"
 	"github.com/winc-link/hummingbird/internal/pkg/utils"
+	"runtime"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -202,13 +204,16 @@ func getNetwork(ethMap map[string]*dtos.SystemNetwork) map[string]dtos.SystemNet
 func getOpenfiles() int {
 	// only linux
 	// https://github.com/shirou/gopsutil#process-class
-	processes, _ := process.Processes()
-	var openfiles int
-	for _, pid := range processes {
-		files, _ := pid.OpenFiles()
-		openfiles += len(files)
+	if strings.ToLower(runtime.GOOS) == "linux" {
+		processes, _ := process.Processes()
+		var openfiles int
+		for _, pid := range processes {
+			files, _ := pid.OpenFiles()
+			openfiles += len(files)
+		}
+		return openfiles
 	}
-	return openfiles
+	return 0
 }
 
 func getPlatform() {

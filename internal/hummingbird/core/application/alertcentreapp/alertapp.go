@@ -853,17 +853,14 @@ func (p alertApp) AddAlert(ctx context.Context, req map[string]interface{}) erro
 				continue
 			}
 			weixinAlertClient := yiqiweixin.NewWeiXinClient(p.lc, p.dic)
-			//发送内容请用户自行完善
-			text := ""
-			go weixinAlertClient.Send(notify.Option["webhook"], text)
+			go weixinAlertClient.Send(notify.Option["webhook"], alertRule.SubRule[0], device, product, alertRule.Name)
 		case constants.DingDing:
 			if !checkEffectTime(notify.StartEffectTime, notify.EndEffectTime) {
 				continue
 			}
-			weixinAlertClient := dingding.NewDingDingClient(p.lc, p.dic)
+			weixinAlertClient := dingding.NewDingDingClient(p.lc)
 			//发送内容请用户自行完善
-			text := ""
-			go weixinAlertClient.Send(notify.Option["webhook"], text)
+			go weixinAlertClient.Send(notify.Option["webhook"], alertRule.SubRule[0], device, product, alertRule.Name)
 		case constants.FeiShu:
 			if !checkEffectTime(notify.StartEffectTime, notify.EndEffectTime) {
 				continue

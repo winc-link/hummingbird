@@ -20,14 +20,6 @@ import (
 )
 
 var (
-	SceneAppName = di.TypeInstanceToName((*interfaces.SceneApp)(nil))
-)
-
-func SceneAppNameFrom(get di.Get) interfaces.SceneApp {
-	return get(SceneAppName).(interfaces.SceneApp)
-}
-
-var (
 	ConJobAppName = di.TypeInstanceToName((*interfaces.ConJob)(nil))
 )
 

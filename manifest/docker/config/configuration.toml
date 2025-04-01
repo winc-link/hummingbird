@@ -37,10 +37,12 @@ DataSource = 'hummingbird/db-data/core-data/core.db?_timeout=5000'
 
 [Databases.Data]
 [Databases.Data.Primary]
-Type = 'leveldb'
-DataSource = 'hummingbird/db-data/leveldb-core-data/'
+#Type = 'tstorage'
+#DataSource = 'manifest/docker/db-data/tstorage-data/'
 #Type = 'tdengine'
 #Dsn = 'root:taosdata@ws(127.0.0.1:6041)/hummingbird'
+Type = 'leveldb'
+DataSource = 'manifest/docker/db-data/leveldb-core-data/'
 
 [MessageQueue]
 Protocol = 'tcp'

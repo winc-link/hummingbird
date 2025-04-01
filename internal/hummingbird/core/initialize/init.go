@@ -21,7 +21,6 @@ import (
 	"github.com/winc-link/hummingbird/internal/hummingbird/core/application"
 	"github.com/winc-link/hummingbird/internal/hummingbird/core/application/alertcentreapp"
 	"github.com/winc-link/hummingbird/internal/hummingbird/core/application/categorytemplate"
-	"github.com/winc-link/hummingbird/internal/hummingbird/core/application/dataresource"
 	"github.com/winc-link/hummingbird/internal/hummingbird/core/application/deviceapp"
 	"github.com/winc-link/hummingbird/internal/hummingbird/core/application/dmi"
 	"github.com/winc-link/hummingbird/internal/hummingbird/core/application/docapp"
@@ -35,11 +34,8 @@ import (
 	"github.com/winc-link/hummingbird/internal/hummingbird/core/application/persistence"
 	"github.com/winc-link/hummingbird/internal/hummingbird/core/application/productapp"
 	"github.com/winc-link/hummingbird/internal/hummingbird/core/application/quicknavigationapp"
-	"github.com/winc-link/hummingbird/internal/hummingbird/core/application/ruleengine"
-	"github.com/winc-link/hummingbird/internal/hummingbird/core/application/scene"
 	"github.com/winc-link/hummingbird/internal/hummingbird/core/application/thingmodelapp"
 	"github.com/winc-link/hummingbird/internal/hummingbird/core/application/thingmodeltemplate"
-	"github.com/winc-link/hummingbird/internal/hummingbird/core/application/timerapp"
 	"github.com/winc-link/hummingbird/internal/hummingbird/core/application/unittemplate"
 	"github.com/winc-link/hummingbird/internal/hummingbird/core/application/userapp"
 	"github.com/winc-link/hummingbird/internal/hummingbird/core/config"
@@ -55,7 +51,6 @@ import (
 	"github.com/winc-link/hummingbird/internal/pkg/handlers"
 	"github.com/winc-link/hummingbird/internal/pkg/logger"
 	"github.com/winc-link/hummingbird/internal/pkg/startup"
-	"github.com/winc-link/hummingbird/internal/pkg/timer/jobrunner"
 	"github.com/winc-link/hummingbird/internal/tools/ekuiperclient"
 	"github.com/winc-link/hummingbird/internal/tools/hpcloudclient"
 	"github.com/winc-link/hummingbird/internal/tools/notify/sms"
@@ -201,34 +196,6 @@ func (b *Bootstrap) initClient(ctx context.Context, wg *sync.WaitGroup, dic *di.
 	dic.Update(di.ServiceConstructorMap{
 		container.AlertRuleAppName: func(get di.Get) interface{} {
 			return alertCentreApp
-		},
-	})
-
-	ruleEngineApp := ruleengine.NewRuleEngineApp(ctx, dic)
-	dic.Update(di.ServiceConstructorMap{
-		container.RuleEngineAppName: func(get di.Get) interface{} {
-			return ruleEngineApp
-		},
-	})
-
-	sceneApp := scene.NewSceneApp(ctx, dic)
-	dic.Update(di.ServiceConstructorMap{
-		container.SceneAppName: func(get di.Get) interface{} {
-			return sceneApp
-		},
-	})
-
-	conJobApp := timerapp.NewCronTimer(ctx, jobrunner.NewJobRunFunc(dic), dic)
-	dic.Update(di.ServiceConstructorMap{
-		container.ConJobAppName: func(get di.Get) interface{} {
-			return conJobApp
-		},
-	})
-
-	dataResourceApp := dataresource.NewDataResourceApp(ctx, dic)
-	dic.Update(di.ServiceConstructorMap{
-		container.DataResourceName: func(get di.Get) interface{} {
-			return dataResourceApp
 		},
 	})
 

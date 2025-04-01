@@ -26,11 +26,3 @@ var (
 func AlertRuleAppNameFrom(get di.Get) interfaces.AlertRuleApp {
 	return get(AlertRuleAppName).(interfaces.AlertRuleApp)
 }
-
-var (
-	RuleEngineAppName = di.TypeInstanceToName((*interfaces.RuleEngineApp)(nil))
-)
-
-func RuleEngineAppNameFrom(get di.Get) interfaces.RuleEngineApp {
-	return get(RuleEngineAppName).(interfaces.RuleEngineApp)
-}

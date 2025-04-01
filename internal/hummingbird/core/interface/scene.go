@@ -15,24 +15,8 @@
 package interfaces
 
 import (
-	"context"
-	"github.com/winc-link/hummingbird/internal/dtos"
-	"github.com/winc-link/hummingbird/internal/models"
 	"github.com/winc-link/hummingbird/internal/pkg/timer/jobs"
 )
-
-type SceneApp interface {
-	AddScene(ctx context.Context, req dtos.SceneAddRequest) (string, error)
-	UpdateScene(ctx context.Context, req dtos.SceneUpdateRequest) error
-	SceneById(ctx context.Context, sceneId string) (models.Scene, error)
-	SceneStartById(ctx context.Context, sceneId string) error
-	SceneStopById(ctx context.Context, sceneId string) error
-	DelSceneById(ctx context.Context, sceneId string) error
-	SceneSearch(ctx context.Context, req dtos.SceneSearchQueryRequest) ([]models.Scene, uint32, error)
-	CheckSceneByDeviceId(ctx context.Context, deviceId string) error
-	SceneLogSearch(ctx context.Context, req dtos.SceneLogSearchQueryRequest) ([]models.SceneLog, uint32, error)
-	EkuiperNotify(ctx context.Context, req map[string]interface{}) error
-}
 
 type ConJob interface {
 	AddJobToRunQueue(j *jobs.JobSchedule) error

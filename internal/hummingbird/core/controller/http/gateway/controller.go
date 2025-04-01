@@ -83,16 +83,12 @@ func (ctl *controller) getThingModelApp() interfaces.ThingModelCtlItf {
 	return container.ThingModelAppNameFrom(ctl.dic.Get)
 }
 
-func (ctl *controller) getUnitModelApp() interfaces.UnitApp {
-	return container.UnitTemplateAppFrom(ctl.dic.Get)
-}
-
 func (ctl *controller) getAlertRuleApp() interfaces.AlertRuleApp {
 	return container.AlertRuleAppNameFrom(ctl.dic.Get)
 }
 
-func (ctl *controller) getRuleEngineApp() interfaces.RuleEngineApp {
-	return container.RuleEngineAppNameFrom(ctl.dic.Get)
+func (ctl *controller) getUnitModelApp() interfaces.UnitApp {
+	return container.UnitTemplateAppFrom(ctl.dic.Get)
 }
 
 func (ctl *controller) getHomePageApp() interfaces.HomePageItf {
@@ -105,12 +101,4 @@ func (ctl *controller) getDocsApp() interfaces.DocsApp {
 
 func (ctl *controller) getQuickNavigationApp() interfaces.QuickNavigation {
 	return container.QuickNavigationAppTemplateAppFrom(ctl.dic.Get)
-}
-
-func (ctl *controller) getDataResourceApp() interfaces.DataResourceApp {
-	return container.DataResourceFrom(ctl.dic.Get)
-}
-
-func (ctl *controller) getSceneApp() interfaces.SceneApp {
-	return container.SceneAppNameFrom(ctl.dic.Get)
 }

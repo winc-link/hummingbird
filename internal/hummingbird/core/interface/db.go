@@ -117,22 +117,6 @@ type DBClient interface {
 	AddMsgGather(msgGather models.MsgGather) error
 	MsgGatherSearch(offset int, limit int, req dtos.MsgGatherSearchQueryRequest) (msgGather []models.MsgGather, count uint32, edgeXErr error)
 
-	AddDataResource(dateResource models.DataResource) (string, error)
-	UpdateDataResource(dateResource models.DataResource) error
-	DelDataResource(id string) error
-	//DataResourceById(id string) models.DataResource
-
-	UpdateDataResourceHealth(id string, health bool) error
-	SearchDataResource(offset int, limit int, req dtos.DataResourceSearchQueryRequest) (dataResource []models.DataResource, count uint32, edgeXErr error)
-	DataResourceById(id string) (models.DataResource, error)
-	AddRuleEngine(ruleEngine models.RuleEngine) (string, error)
-	UpdateRuleEngine(ruleEngine models.RuleEngine) error
-	RuleEngineById(id string) (ruleEngine models.RuleEngine, edgeXErr error)
-	RuleEngineSearch(offset int, limit int, req dtos.RuleEngineSearchQueryRequest) (ruleEngine []models.RuleEngine, count uint32, edgeXErr error)
-	RuleEngineStart(id string) error
-	RuleEngineStop(id string) error
-	DeleteRuleEngineById(id string) error
-
 	LanguageSdkByName(name string) (cloudService models.LanguageSdk, edgeXErr error)
 	LanguageSearch(offset int, limit int, req dtos.LanguageSDKSearchQueryRequest) (languages []models.LanguageSdk, count uint32, edgeXErr error)
 	AddLanguageSdk(cs models.LanguageSdk) (language models.LanguageSdk, edgeXErr error)
@@ -140,7 +124,6 @@ type DBClient interface {
 
 	DeviceAlert
 	UserDB
-	Scene
 	SystemMonitor
 }
 
@@ -171,17 +154,4 @@ type DeviceAlert interface {
 	AlertListSearch(offset int, limit int, req dtos.AlertSearchQueryRequest) (alertList []dtos.AlertSearchQueryResponse, total uint32, edgeXErr error)
 	AlertIgnore(id string) (edgeXErr error)
 	TreatedIgnore(id, message string) (edgeXErr error)
-}
-
-type Scene interface {
-	AddScene(scene models.Scene) (models.Scene, error)
-	SceneById(id string) (models.Scene, error)
-	UpdateScene(scene models.Scene) error
-	SceneStart(id string) error
-	SceneStop(id string) error
-	DeleteSceneById(id string) error
-	SceneSearch(offset int, limit int, req dtos.SceneSearchQueryRequest) (scenes []models.Scene, total uint32, edgeXErr error)
-
-	AddSceneLog(sceneLog models.SceneLog) (models.SceneLog, error)
-	SceneLogSearch(offset int, limit int, req dtos.SceneLogSearchQueryRequest) (sceneLogs []models.SceneLog, total uint32, edgeXErr error)
 }

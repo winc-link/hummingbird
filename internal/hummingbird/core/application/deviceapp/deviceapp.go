@@ -226,13 +226,6 @@ func (p *deviceApp) DeleteDeviceById(ctx context.Context, id string) error {
 	if edgeXErr != nil {
 		return edgeXErr
 	}
-
-	sceneApp := resourceContainer.SceneAppNameFrom(p.dic.Get)
-	edgeXErr = sceneApp.CheckSceneByDeviceId(ctx, id)
-	if edgeXErr != nil {
-		return edgeXErr
-	}
-
 	err = p.dbClient.DeleteDeviceById(id)
 	if err != nil {
 		return err
@@ -263,12 +256,6 @@ func (p *deviceApp) DeviceUpdate(ctx context.Context, req dtos.DeviceUpdateReque
 	}
 	alertApp := resourceContainer.AlertRuleAppNameFrom(p.dic.Get)
 	edgeXErr = alertApp.CheckRuleByDeviceId(ctx, req.Id)
-	if edgeXErr != nil {
-		return edgeXErr
-	}
-
-	sceneApp := resourceContainer.SceneAppNameFrom(p.dic.Get)
-	edgeXErr = sceneApp.CheckSceneByDeviceId(ctx, req.Id)
 	if edgeXErr != nil {
 		return edgeXErr
 	}

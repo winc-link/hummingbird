@@ -36,7 +36,6 @@ func RegisterGateway(engine *gin.Engine, dic *di.Container) {
 	v1.POST("auth/init-password", ctl.InitPassword)
 
 	v1.POST("ekuiper/alert", ctl.EkuiperAlert)
-	v1.POST("ekuiper/scene", ctl.EkuiperScene) //ekuiper 服务调用
 	v1.GET("ws/", websocket.NewServer(dic).Handle)
 
 	v1Auth := v1.Group("", jwt.JWTAuth(false))
@@ -150,41 +149,7 @@ func RegisterGateway(engine *gin.Engine, dic *di.Container) {
 		v1Auth.POST("alert-treated", ctl.AlertTreated)
 
 	}
-	/*******规则引擎 *******/
-	{
-		v1Auth.POST("rule-engine", ctl.RuleEngineAdd)
-		v1Auth.PUT("rule-engine", ctl.RuleEngineUpdate)
-		v1Auth.GET("rule-engine/:ruleEngineId", ctl.RuleEngineById)
-		v1Auth.GET("rule-engine", ctl.RuleEngineSearch)
-		v1Auth.POST("rule-engine/:ruleEngineId/start", ctl.RuleEngineStart)
-		v1Auth.POST("rule-engine/:ruleEngineId/stop", ctl.RuleEngineStop)
-		v1Auth.DELETE("rule-engine/:ruleEngineId/delete", ctl.RuleEngineDelete)
-		v1Auth.GET("rule-engine/:ruleEngineId/status", ctl.RuleEngineStatus)
 
-	}
-	/*******资源管理 *******/
-	{
-		v1Auth.GET("typeresource", ctl.DataResourceType)
-		v1Auth.PUT("dataresource", ctl.UpdateDataResource)
-		v1Auth.POST("dataresource", ctl.DataResourceAdd)
-		v1Auth.DELETE("dataresource/:dataResourceId", ctl.DataResourceDel)
-		v1Auth.GET("dataresource", ctl.DataResourceSearch)
-		v1Auth.GET("dataresource/:dataResourceId", ctl.DataResourceById)
-		v1Auth.POST("dataresource/:dataResourceId/health", ctl.DataResourceHealth)
-
-	}
-	/*******场景联动 *******/
-	{
-
-		v1Auth.POST("scene", ctl.SceneAdd)
-		v1Auth.PUT("scene", ctl.SceneUpdate)
-		v1Auth.GET("scene/:sceneId", ctl.SceneById)
-		v1Auth.GET("scene", ctl.SearchScene)
-		v1Auth.POST("scene/:sceneId/start", ctl.SceneStart)
-		v1Auth.POST("scene/:sceneId/stop", ctl.SceneStop)
-		v1Auth.DELETE("scene/:sceneId", ctl.DeleteScene)
-		v1Auth.GET("scene/:sceneId/log", ctl.SceneLogSearch)
-	}
 	/*******文档中心（sdk） *******/
 	{
 

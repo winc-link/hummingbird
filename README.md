@@ -1,3 +1,34 @@
+
+<div align="right">
+  <details>
+    <summary >🌐 Language</summary>
+    <div>
+      <div align="center">
+        <a href="https://openaitx.github.io/view.html?user=winc-link&project=hummingbird&lang=en">English</a>
+        | <a href="https://openaitx.github.io/view.html?user=winc-link&project=hummingbird&lang=zh-CN">简体中文</a>
+        | <a href="https://openaitx.github.io/view.html?user=winc-link&project=hummingbird&lang=zh-TW">繁體中文</a>
+        | <a href="https://openaitx.github.io/view.html?user=winc-link&project=hummingbird&lang=ja">日本語</a>
+        | <a href="https://openaitx.github.io/view.html?user=winc-link&project=hummingbird&lang=ko">한국어</a>
+        | <a href="https://openaitx.github.io/view.html?user=winc-link&project=hummingbird&lang=hi">हिन्दी</a>
+        | <a href="https://openaitx.github.io/view.html?user=winc-link&project=hummingbird&lang=th">ไทย</a>
+        | <a href="https://openaitx.github.io/view.html?user=winc-link&project=hummingbird&lang=fr">Français</a>
+        | <a href="https://openaitx.github.io/view.html?user=winc-link&project=hummingbird&lang=de">Deutsch</a>
+        | <a href="https://openaitx.github.io/view.html?user=winc-link&project=hummingbird&lang=es">Español</a>
+        | <a href="https://openaitx.github.io/view.html?user=winc-link&project=hummingbird&lang=it">Italiano</a>
+        | <a href="https://openaitx.github.io/view.html?user=winc-link&project=hummingbird&lang=ru">Русский</a>
+        | <a href="https://openaitx.github.io/view.html?user=winc-link&project=hummingbird&lang=pt">Português</a>
+        | <a href="https://openaitx.github.io/view.html?user=winc-link&project=hummingbird&lang=nl">Nederlands</a>
+        | <a href="https://openaitx.github.io/view.html?user=winc-link&project=hummingbird&lang=pl">Polski</a>
+        | <a href="https://openaitx.github.io/view.html?user=winc-link&project=hummingbird&lang=ar">العربية</a>
+        | <a href="https://openaitx.github.io/view.html?user=winc-link&project=hummingbird&lang=fa">فارسی</a>
+        | <a href="https://openaitx.github.io/view.html?user=winc-link&project=hummingbird&lang=tr">Türkçe</a>
+        | <a href="https://openaitx.github.io/view.html?user=winc-link&project=hummingbird&lang=vi">Tiếng Việt</a>
+        | <a href="https://openaitx.github.io/view.html?user=winc-link&project=hummingbird&lang=id">Bahasa Indonesia</a>
+      </div>
+    </div>
+  </details>
+</div>
+
 <p align="center">
 	<img src="manifest/image/logo.png" width="100">
 <br>
